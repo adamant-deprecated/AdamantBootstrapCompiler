@@ -1,0 +1,9 @@
+*.suo
+*.user
+*.VisualState.xml
+bin
+Bin
+obj
+_ReSharper*
+packages
+.vs/
