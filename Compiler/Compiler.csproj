@@ -61,6 +61,7 @@
     <Compile Include="AdamantVisitor.cs">
       <DependentUpon>Adamant.g4</DependentUpon>
     </Compile>
+    <Compile Include="Lexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

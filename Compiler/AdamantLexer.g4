@@ -2,22 +2,22 @@ lexer grammar AdamantLexer;
 
 import Unicode;
 
-channels {Comments, DocComments}
+channels {DocComments}
 
 SingleLineDocComment
-	: '///' InputChar* -> channel(DocComments) // TODO contents
+	: '///' InputChar* -> channel(DocComments)
 	;
 
 BlockDocComment
-	: '/**' .*? '*/' -> channel(DocComments) // TODO contents
+	: '/**' .*? '*/' -> channel(DocComments)
 	;
 
 SingleLineComment
-	: '//' InputChar* -> channel(Comments) // TODO contents
+	: '//' InputChar* -> skip
 	;
 
 BlockComment
-	: '/*' .*? '*/' -> channel(Comments) // TODO contents
+	: '/*' .*? '*/' -> skip
 	;
 
 fragment InputChar
