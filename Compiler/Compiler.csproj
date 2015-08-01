@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr4.Runtime">
+      <HintPath>..\lib\Antlr4.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,15 +43,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdamantBaseListener.cs">
+      <DependentUpon>Adamant.g4</DependentUpon>
+    </Compile>
+    <Compile Include="AdamantBaseVisitor.cs">
+      <DependentUpon>Adamant.g4</DependentUpon>
+    </Compile>
+    <Compile Include="AdamantLexer.cs">
+      <DependentUpon>Adamant.g4</DependentUpon>
+    </Compile>
+    <Compile Include="AdamantListener.cs">
+      <DependentUpon>Adamant.g4</DependentUpon>
+    </Compile>
+    <Compile Include="AdamantParser.cs">
+      <DependentUpon>Adamant.g4</DependentUpon>
+    </Compile>
+    <Compile Include="AdamantVisitor.cs">
+      <DependentUpon>Adamant.g4</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Adamant.g4" />
+    <None Include="Adamant.tokens">
+      <DependentUpon>Adamant.g4</DependentUpon>
+    </None>
     <None Include="AdamantLexer.g4" />
+    <None Include="AdamantLexer.tokens">
+      <DependentUpon>AdamantLexer.g4</DependentUpon>
+    </None>
     <None Include="AdamantPreprocessor.g4" />
     <None Include="Unicode.g4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(SolutionDir)tools\antlr4.bat $(ProjectDir)Adamant.g4 -visitor -package Adamant.Compiler</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

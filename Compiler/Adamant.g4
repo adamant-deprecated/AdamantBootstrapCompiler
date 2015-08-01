@@ -2,6 +2,11 @@ grammar Adamant;
 
 import AdamantPreprocessor;
 
+options
+{
+	language=CSharp;
+}
+
 compilationUnit
 	: usingStatement*
 	  // globalAttribute*
