@@ -1,0 +1,5 @@
+# This directory is used by the testing scripts as a scratch area
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
