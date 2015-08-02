@@ -14,28 +14,28 @@ channels { Preprocessor }
 
 // Declaration Directives
 PP_Define
-	: '#define' Whitespace PP_ConditionalSymbol PP_RestOfLine -> channel(Preprocessor)
+	: '#define' Whitespace PP_ConditionalSymbol PP_RestOfLine { PreprocessorDefine(); } -> channel(Preprocessor)
 	;
 
 PP_Undefine
-	: '#undefine' Whitespace PP_ConditionalSymbol PP_RestOfLine -> channel(Preprocessor)
+	: '#undefine' Whitespace PP_ConditionalSymbol PP_RestOfLine { PreprocessorUndefine(); } -> channel(Preprocessor)
 	;
 
 // Conditional Directives
 PP_If
-	: '#if' Whitespace PP_Expression PP_RestOfLine { TestAction(); } -> channel(Preprocessor)
+	: '#if' Whitespace PP_Expression PP_RestOfLine { PreprocessorIf(); } -> channel(Preprocessor)
 	;
 
 PP_Elseif
-	:'#elseif' Whitespace PP_Expression PP_RestOfLine { TestAction(); } -> channel(Preprocessor)
+	:'#elseif' Whitespace PP_Expression PP_RestOfLine { PreprocessorElseIf(); } -> channel(Preprocessor)
 	;
 
 PP_Else
-	: '#else' PP_RestOfLine -> channel(Preprocessor)
+	: '#else' PP_RestOfLine { PreprocessorElse(); } -> channel(Preprocessor)
 	;
 
 PP_Endif
-	: '#endif' PP_RestOfLine -> channel(Preprocessor)
+	: '#endif' PP_RestOfLine { PreprocessorEndif(); }-> channel(Preprocessor)
 	;
 
 // Line directive
@@ -61,6 +61,9 @@ PP_EndRegion
 	: '#endregion' Whitespace PP_Message -> channel(Preprocessor)
 	;
 
+PP_Invalid
+	: '#' InputChar* -> channel(Preprocessor)
+	;
 // -------------------------
 // Fragments used by Preprocessor Directives
 // -------------------------
