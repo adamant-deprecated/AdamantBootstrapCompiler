@@ -46,9 +46,9 @@
     <Compile Include="Antlr\AdamantLexer.cs">
       <DependentUpon>AdamantLexer.g4</DependentUpon>
     </Compile>
-	  <Compile Include="Antlr\AdamantParser.cs" >
-		  <DependentUpon>AdamantParser.g4</DependentUpon>
-	  </Compile>
+    <Compile Include="Antlr\AdamantParser.cs">
+      <DependentUpon>AdamantParser.g4</DependentUpon>
+    </Compile>
     <Compile Include="Antlr\AdamantParserBaseListener.cs">
       <DependentUpon>AdamantParser.g4</DependentUpon>
     </Compile>
@@ -61,10 +61,11 @@
     <Compile Include="Antlr\AdamantParserVisitor.cs">
       <DependentUpon>AdamantParser.g4</DependentUpon>
     </Compile>
-    <Compile Include="Antlr\Lexer.cs" />
+    <Compile Include="Antlr\AdamantLexer.partial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Antlr\AdamantCommon.g4" />
     <None Include="Antlr\AdamantParser.g4" />
     <None Include="Antlr\AdamantLexer.g4" />
     <None Include="Antlr\AdamantLexer.tokens">
@@ -73,14 +74,17 @@
     <None Include="Antlr\AdamantParser.tokens">
       <DependentUpon>AdamantParser.g4</DependentUpon>
     </None>
-    <None Include="Antlr\AdamantPreprocessorLine.g4" />
+    <None Include="Antlr\PreprocessorLineLexer.g4" />
+    <None Include="Antlr\PreprocessorLineParser.g4" />
     <None Include="Antlr\Unicode.g4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)Antlr
 CALL $(SolutionDir)tools\antlr4.bat AdamantLexer.g4 -package Adamant.Compiler.Antlr
-CALL $(SolutionDir)tools\antlr4.bat AdamantParser.g4 -visitor -package Adamant.Compiler.Antlr</PreBuildEvent>
+CALL $(SolutionDir)tools\antlr4.bat AdamantParser.g4 -visitor -package Adamant.Compiler.Antlr
+CALL $(SolutionDir)tools\antlr4.bat PreprocessorLineLexer.g4 -package Adamant.Compiler.Antlr
+CALL $(SolutionDir)tools\antlr4.bat PreprocessorLineParser.g4 -package Adamant.Compiler.Antlr</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

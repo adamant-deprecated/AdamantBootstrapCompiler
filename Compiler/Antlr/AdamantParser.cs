@@ -32,9 +32,9 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 [System.CLSCompliant(false)]
 public partial class AdamantParser : Parser {
 	public const int
-		Whitespace=1, NewLine=2, SingleLineDocComment=3, BlockDocComment=4, SingleLineComment=5, 
-		BlockComment=6, PreprocessorLine=7, PreprocessorSkippedSection=8, Using=9, 
-		Namespace=10, True=11, False=12, Identifier=13, EscapedIdentifier=14, 
+		SingleLineDocComment=1, BlockDocComment=2, SingleLineComment=3, BlockComment=4, 
+		PreprocessorLine=5, Whitespace=6, NewLine=7, PreprocessorSkippedSection=8, 
+		Using=9, Namespace=10, True=11, False=12, Identifier=13, EscapedIdentifier=14, 
 		Semicolon=15, Dot=16, LeftBrace=17, RightBrace=18;
 	public const int
 		RULE_compilationUnit = 0, RULE_usingStatement = 1, RULE_namespaceName = 2, 
@@ -49,8 +49,8 @@ public partial class AdamantParser : Parser {
 		"'true'", "'false'", null, null, "';'", "'.'", "'{'", "'}'"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "Whitespace", "NewLine", "SingleLineDocComment", "BlockDocComment", 
-		"SingleLineComment", "BlockComment", "PreprocessorLine", "PreprocessorSkippedSection", 
+		null, "SingleLineDocComment", "BlockDocComment", "SingleLineComment", 
+		"BlockComment", "PreprocessorLine", "Whitespace", "NewLine", "PreprocessorSkippedSection", 
 		"Using", "Namespace", "True", "False", "Identifier", "EscapedIdentifier", 
 		"Semicolon", "Dot", "LeftBrace", "RightBrace"
 	};

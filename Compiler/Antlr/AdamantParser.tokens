@@ -1,10 +1,10 @@
-Whitespace=1
-NewLine=2
-SingleLineDocComment=3
-BlockDocComment=4
-SingleLineComment=5
-BlockComment=6
-PreprocessorLine=7
+SingleLineDocComment=1
+BlockDocComment=2
+SingleLineComment=3
+BlockComment=4
+PreprocessorLine=5
+Whitespace=6
+NewLine=7
 PreprocessorSkippedSection=8
 Using=9
 Namespace=10
