@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Adamant.Compiler
+namespace Adamant.Compiler.Antlr
 {
 	public partial class AdamantLexer
 	{

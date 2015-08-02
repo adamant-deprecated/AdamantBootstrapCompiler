@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\data\projects\adamant-lang\Adamant.Compiler\Compiler\Adamant.g4 by ANTLR 4.5.1
+// Generated from C:\data\projects\adamant-lang\Adamant.Compiler\Compiler\Antlr\Adamant.g4 by ANTLR 4.5.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -17,7 +17,7 @@
 // Missing XML comment for publicly visible type or member '...'
 #pragma warning disable 1591
 
-namespace Adamant.Compiler {
+namespace Adamant.Compiler.Antlr {
 
 using Antlr4.Runtime.Misc;
 using IErrorNode = Antlr4.Runtime.Tree.IErrorNode;
@@ -107,4 +107,4 @@ public partial class AdamantBaseListener : IAdamantListener {
 	/// <remarks>The default implementation does nothing.</remarks>
 	public virtual void VisitErrorNode([NotNull] IErrorNode node) { }
 }
-} // namespace Adamant.Compiler
+} // namespace Adamant.Compiler.Antlr

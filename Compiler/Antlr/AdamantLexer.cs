@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\data\projects\adamant-lang\Adamant.Compiler\Compiler\Adamant.g4 by ANTLR 4.5.1
+// Generated from C:\data\projects\adamant-lang\Adamant.Compiler\Compiler\Antlr\Adamant.g4 by ANTLR 4.5.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -17,7 +17,7 @@
 // Missing XML comment for publicly visible type or member '...'
 #pragma warning disable 1591
 
-namespace Adamant.Compiler {
+namespace Adamant.Compiler.Antlr {
 using System;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
@@ -451,4 +451,4 @@ public partial class AdamantLexer : Lexer {
 	public static readonly ATN _ATN =
 		new ATNDeserializer().Deserialize(_serializedATN.ToCharArray());
 }
-} // namespace Adamant.Compiler
+} // namespace Adamant.Compiler.Antlr
