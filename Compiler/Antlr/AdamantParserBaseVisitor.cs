@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\data\projects\adamant-lang\Adamant.Compiler\Compiler\Antlr\Adamant.g4 by ANTLR 4.5.1
+// Generated from AdamantParser.g4 by ANTLR 4.5.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -24,14 +24,14 @@ using IToken = Antlr4.Runtime.IToken;
 using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
 /// <summary>
-/// This class provides an empty implementation of <see cref="IAdamantVisitor{Result}"/>,
+/// This class provides an empty implementation of <see cref="IAdamantParserVisitor{Result}"/>,
 /// which can be extended to create a visitor which only needs to handle a subset
 /// of the available methods.
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.5.1")]
 [System.CLSCompliant(false)]
-public partial class AdamantBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IAdamantVisitor<Result> {
+public partial class AdamantParserBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IAdamantParserVisitor<Result> {
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AdamantParser.compilationUnit"/>.
 	/// <para>

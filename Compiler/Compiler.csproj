@@ -43,42 +43,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Antlr\AdamantBaseListener.cs">
-      <DependentUpon>Adamant.g4</DependentUpon>
-    </Compile>
-    <Compile Include="Antlr\AdamantBaseVisitor.cs">
-      <DependentUpon>Adamant.g4</DependentUpon>
-    </Compile>
     <Compile Include="Antlr\AdamantLexer.cs">
-      <DependentUpon>Adamant.g4</DependentUpon>
+      <DependentUpon>AdamantLexer.g4</DependentUpon>
     </Compile>
-    <Compile Include="Antlr\AdamantListener.cs">
-      <DependentUpon>Adamant.g4</DependentUpon>
+	  <Compile Include="Antlr\AdamantParser.cs" >
+		  <DependentUpon>AdamantParser.g4</DependentUpon>
+	  </Compile>
+    <Compile Include="Antlr\AdamantParserBaseListener.cs">
+      <DependentUpon>AdamantParser.g4</DependentUpon>
     </Compile>
-    <Compile Include="Antlr\AdamantParser.cs">
-      <DependentUpon>Adamant.g4</DependentUpon>
+    <Compile Include="Antlr\AdamantParserBaseVisitor.cs">
+      <DependentUpon>AdamantParser.g4</DependentUpon>
     </Compile>
-    <Compile Include="Antlr\AdamantVisitor.cs">
-      <DependentUpon>Adamant.g4</DependentUpon>
+    <Compile Include="Antlr\AdamantParserListener.cs">
+      <DependentUpon>AdamantParser.g4</DependentUpon>
+    </Compile>
+    <Compile Include="Antlr\AdamantParserVisitor.cs">
+      <DependentUpon>AdamantParser.g4</DependentUpon>
     </Compile>
     <Compile Include="Antlr\Lexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Antlr\Adamant.g4" />
-    <None Include="Antlr\Adamant.tokens">
-      <DependentUpon>Adamant.g4</DependentUpon>
-    </None>
+    <None Include="Antlr\AdamantParser.g4" />
     <None Include="Antlr\AdamantLexer.g4" />
     <None Include="Antlr\AdamantLexer.tokens">
       <DependentUpon>AdamantLexer.g4</DependentUpon>
     </None>
-    <None Include="Antlr\AdamantPreprocessor.g4" />
+    <None Include="Antlr\AdamantParser.tokens">
+      <DependentUpon>AdamantParser.g4</DependentUpon>
+    </None>
+    <None Include="Antlr\AdamantPreprocessorLine.g4" />
     <None Include="Antlr\Unicode.g4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)tools\antlr4.bat $(ProjectDir)Antlr\Adamant.g4 -visitor -package Adamant.Compiler.Antlr</PreBuildEvent>
+    <PreBuildEvent>cd $(ProjectDir)Antlr
+CALL $(SolutionDir)tools\antlr4.bat AdamantLexer.g4 -package Adamant.Compiler.Antlr
+CALL $(SolutionDir)tools\antlr4.bat AdamantParser.g4 -visitor -package Adamant.Compiler.Antlr</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

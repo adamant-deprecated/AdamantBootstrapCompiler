@@ -2,8 +2,39 @@ lexer grammar AdamantLexer;
 
 import Unicode;
 
-channels {DocComments}
+channels {DocComments, Preprocessor}
 
+options
+{
+	language=CSharp;
+}
+
+//*************
+// Whitespace
+//*************
+Whitespace
+	: WhitespaceChar+ -> skip
+	;
+
+fragment WhitespaceChar
+	: Unicode_Zs // Any Character With Unicode Class Zs
+	| '\u0009' // Horizontal Tab Character (U+0009)
+	| '\u000B' // Vertical Tab Character (U+000B)'
+	| '\u000C' // Form Feed Character (U+000C)
+	;
+
+NewLine
+	: ('\u000D' // Carriage Return (U+000D)
+	| '\u000A' // Line Feed (U+000A)
+	| '\u000D' '\u000A' // Carriage Return (U+000D) Followed By Line Feed Character (U+000A)
+	| '\u0085' // Next Line (U+0085)
+	| '\u2028' // Line Separator (U+2028)
+	| '\u2029') -> skip // Paragraph Separator (U+2029)
+	;
+
+//*************
+// Comments
+//*************
 SingleLineDocComment
 	: '///' InputChar* -> channel(DocComments)
 	;
@@ -24,32 +55,37 @@ fragment InputChar
 	: ~[\u000D\u000A\u0085\u2028\u2029] // any char except a new line char
 	;
 
-NewLine
-	: ('\u000D' // Carriage Return (U+000D)
-	| '\u000A' // Line Feed (U+000A)
-	| '\u000D' '\u000A' // Carriage Return (U+000D) Followed By Line Feed Character (U+000A)
-	| '\u0085' // Next Line (U+0085)
-	| '\u2028' // Line Separator (U+2028)
-	| '\u2029') -> skip // Paragraph Separator (U+2029)
+//*************
+// Preprocessor
+//*************
+PreprocessorLine
+	: Whitespace* '#' InputChar* { Preprocess(); } -> skip, mode(PREPROCESSOR_SKIP)
 	;
 
-Whitespace
-	: WhitespaceChar+ -> skip
+// Here we use a mode to handle preprocessor sections that are skipped
+mode PREPROCESSOR_SKIP;
+
+PreprocessorSkippedSection
+	: InputChar+? Whitespace* '#' 
 	;
 
-fragment WhitespaceChar
-	: Unicode_Zs // Any Character With Unicode Class Zs
-	| '\u0009' // Horizontal Tab Character (U+0009)
-	| '\u000B' // Vertical Tab Character (U+000B)'
-	| '\u000C' // Form Feed Character (U+000C)
+PreprocessorLineInSkipped
+	// the type here prevents it from creatig another token type
+	: Whitespace* '#' InputChar* { Preprocess(); } -> type(PreprocessorLine), skip 
 	;
 
+// And switch back to default mode so rest of file is correct
+//mode DEFAULT_MODE;
+
+//*************
 // Keywords
+//*************
 Using : 'using';
 Namespace : 'namespace';
 
-
-// Boolean literals
+//*************
+// Literals
+//*************
 True : 'true';
 False : 'false';
 

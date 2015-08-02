@@ -1,8 +1,11 @@
-lexer grammar AdamantPreprocessor;
+grammar AdamantPreprocessor;
 
-import AdamantLexer;
+import Unicode;
 
-channels { Preprocessor }
+/*
+	This grammar is applied to individual preprocessor lines recieved from the main lexer in order
+	to correctly parse and interpret them
+*/
 
 // Note:
 // * Doesn't enforce a preprocessor directive must not have anything on the line before it except whitespace

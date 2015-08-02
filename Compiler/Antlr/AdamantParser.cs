@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\data\projects\adamant-lang\Adamant.Compiler\Compiler\Antlr\Adamant.g4 by ANTLR 4.5.1
+// Generated from AdamantParser.g4 by ANTLR 4.5.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -32,12 +32,10 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 [System.CLSCompliant(false)]
 public partial class AdamantParser : Parser {
 	public const int
-		PP_Define=1, PP_Undefine=2, PP_If=3, PP_Elseif=4, PP_Else=5, PP_Endif=6, 
-		PP_Line=7, PP_Error=8, PP_Warning=9, PP_StartRegion=10, PP_EndRegion=11, 
-		PP_Invalid=12, SingleLineDocComment=13, BlockDocComment=14, SingleLineComment=15, 
-		BlockComment=16, NewLine=17, Whitespace=18, Using=19, Namespace=20, True=21, 
-		False=22, Identifier=23, EscapedIdentifier=24, Semicolon=25, Dot=26, LeftBrace=27, 
-		RightBrace=28;
+		Whitespace=1, NewLine=2, SingleLineDocComment=3, BlockDocComment=4, SingleLineComment=5, 
+		BlockComment=6, PreprocessorLine=7, PreprocessorSkippedSection=8, Using=9, 
+		Namespace=10, True=11, False=12, Identifier=13, EscapedIdentifier=14, 
+		Semicolon=15, Dot=16, LeftBrace=17, RightBrace=18;
 	public const int
 		RULE_compilationUnit = 0, RULE_usingStatement = 1, RULE_namespaceName = 2, 
 		RULE_namespaceMemberDeclaration = 3, RULE_namespaceDeclaration = 4;
@@ -47,17 +45,14 @@ public partial class AdamantParser : Parser {
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, "'using'", "'namespace'", "'true'", 
-		"'false'", null, null, "';'", "'.'", "'{'", "'}'"
+		null, null, null, null, null, null, null, null, null, "'using'", "'namespace'", 
+		"'true'", "'false'", null, null, "';'", "'.'", "'{'", "'}'"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "PP_Define", "PP_Undefine", "PP_If", "PP_Elseif", "PP_Else", "PP_Endif", 
-		"PP_Line", "PP_Error", "PP_Warning", "PP_StartRegion", "PP_EndRegion", 
-		"PP_Invalid", "SingleLineDocComment", "BlockDocComment", "SingleLineComment", 
-		"BlockComment", "NewLine", "Whitespace", "Using", "Namespace", "True", 
-		"False", "Identifier", "EscapedIdentifier", "Semicolon", "Dot", "LeftBrace", 
-		"RightBrace"
+		null, "Whitespace", "NewLine", "SingleLineDocComment", "BlockDocComment", 
+		"SingleLineComment", "BlockComment", "PreprocessorLine", "PreprocessorSkippedSection", 
+		"Using", "Namespace", "True", "False", "Identifier", "EscapedIdentifier", 
+		"Semicolon", "Dot", "LeftBrace", "RightBrace"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -70,7 +65,7 @@ public partial class AdamantParser : Parser {
 		}
 	}
 
-	public override string GrammarFileName { get { return "Adamant.g4"; } }
+	public override string GrammarFileName { get { return "AdamantParser.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
@@ -101,15 +96,15 @@ public partial class AdamantParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_compilationUnit; } }
 		public override void EnterRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.EnterCompilationUnit(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.ExitCompilationUnit(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IAdamantVisitor<TResult> typedVisitor = visitor as IAdamantVisitor<TResult>;
+			IAdamantParserVisitor<TResult> typedVisitor = visitor as IAdamantParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCompilationUnit(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -173,15 +168,15 @@ public partial class AdamantParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_usingStatement; } }
 		public override void EnterRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.EnterUsingStatement(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.ExitUsingStatement(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IAdamantVisitor<TResult> typedVisitor = visitor as IAdamantVisitor<TResult>;
+			IAdamantParserVisitor<TResult> typedVisitor = visitor as IAdamantParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitUsingStatement(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -221,15 +216,15 @@ public partial class AdamantParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_namespaceName; } }
 		public override void EnterRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.EnterNamespaceName(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.ExitNamespaceName(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IAdamantVisitor<TResult> typedVisitor = visitor as IAdamantVisitor<TResult>;
+			IAdamantParserVisitor<TResult> typedVisitor = visitor as IAdamantParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitNamespaceName(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -281,15 +276,15 @@ public partial class AdamantParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_namespaceMemberDeclaration; } }
 		public override void EnterRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.EnterNamespaceMemberDeclaration(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.ExitNamespaceMemberDeclaration(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IAdamantVisitor<TResult> typedVisitor = visitor as IAdamantVisitor<TResult>;
+			IAdamantParserVisitor<TResult> typedVisitor = visitor as IAdamantParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitNamespaceMemberDeclaration(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -338,15 +333,15 @@ public partial class AdamantParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_namespaceDeclaration; } }
 		public override void EnterRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.EnterNamespaceDeclaration(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
-			IAdamantListener typedListener = listener as IAdamantListener;
+			IAdamantParserListener typedListener = listener as IAdamantParserListener;
 			if (typedListener != null) typedListener.ExitNamespaceDeclaration(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IAdamantVisitor<TResult> typedVisitor = visitor as IAdamantVisitor<TResult>;
+			IAdamantParserVisitor<TResult> typedVisitor = visitor as IAdamantParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitNamespaceDeclaration(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -404,7 +399,7 @@ public partial class AdamantParser : Parser {
 	}
 
 	public static readonly string _serializedATN =
-		"\x3\x430\xD6D1\x8206\xAD2D\x4417\xAEF1\x8D80\xAADD\x3\x1E:\x4\x2\t\x2"+
+		"\x3\x430\xD6D1\x8206\xAD2D\x4417\xAEF1\x8D80\xAADD\x3\x14:\x4\x2\t\x2"+
 		"\x4\x3\t\x3\x4\x4\t\x4\x4\x5\t\x5\x4\x6\t\x6\x3\x2\a\x2\xE\n\x2\f\x2\xE"+
 		"\x2\x11\v\x2\x3\x2\a\x2\x14\n\x2\f\x2\xE\x2\x17\v\x2\x3\x2\x3\x2\x3\x3"+
 		"\x3\x3\x3\x3\x3\x3\x3\x4\x3\x4\x3\x4\a\x4\"\n\x4\f\x4\xE\x4%\v\x4\x3\x5"+
@@ -415,16 +410,15 @@ public partial class AdamantParser : Parser {
 		"\x2\x2\x2\xF\r\x3\x2\x2\x2\xF\x10\x3\x2\x2\x2\x10\x15\x3\x2\x2\x2\x11"+
 		"\xF\x3\x2\x2\x2\x12\x14\x5\b\x5\x2\x13\x12\x3\x2\x2\x2\x14\x17\x3\x2\x2"+
 		"\x2\x15\x13\x3\x2\x2\x2\x15\x16\x3\x2\x2\x2\x16\x18\x3\x2\x2\x2\x17\x15"+
-		"\x3\x2\x2\x2\x18\x19\a\x2\x2\x3\x19\x3\x3\x2\x2\x2\x1A\x1B\a\x15\x2\x2"+
-		"\x1B\x1C\x5\x6\x4\x2\x1C\x1D\a\x1B\x2\x2\x1D\x5\x3\x2\x2\x2\x1E#\a\x19"+
-		"\x2\x2\x1F \a\x1C\x2\x2 \"\a\x19\x2\x2!\x1F\x3\x2\x2\x2\"%\x3\x2\x2\x2"+
-		"#!\x3\x2\x2\x2#$\x3\x2\x2\x2$\a\x3\x2\x2\x2%#\x3\x2\x2\x2&\'\x5\n\x6\x2"+
-		"\'\t\x3\x2\x2\x2()\a\x16\x2\x2)*\x5\x6\x4\x2*.\a\x1D\x2\x2+-\x5\x4\x3"+
-		"\x2,+\x3\x2\x2\x2-\x30\x3\x2\x2\x2.,\x3\x2\x2\x2./\x3\x2\x2\x2/\x34\x3"+
-		"\x2\x2\x2\x30.\x3\x2\x2\x2\x31\x33\x5\b\x5\x2\x32\x31\x3\x2\x2\x2\x33"+
-		"\x36\x3\x2\x2\x2\x34\x32\x3\x2\x2\x2\x34\x35\x3\x2\x2\x2\x35\x37\x3\x2"+
-		"\x2\x2\x36\x34\x3\x2\x2\x2\x37\x38\a\x1E\x2\x2\x38\v\x3\x2\x2\x2\a\xF"+
-		"\x15#.\x34";
+		"\x3\x2\x2\x2\x18\x19\a\x2\x2\x3\x19\x3\x3\x2\x2\x2\x1A\x1B\a\v\x2\x2\x1B"+
+		"\x1C\x5\x6\x4\x2\x1C\x1D\a\x11\x2\x2\x1D\x5\x3\x2\x2\x2\x1E#\a\xF\x2\x2"+
+		"\x1F \a\x12\x2\x2 \"\a\xF\x2\x2!\x1F\x3\x2\x2\x2\"%\x3\x2\x2\x2#!\x3\x2"+
+		"\x2\x2#$\x3\x2\x2\x2$\a\x3\x2\x2\x2%#\x3\x2\x2\x2&\'\x5\n\x6\x2\'\t\x3"+
+		"\x2\x2\x2()\a\f\x2\x2)*\x5\x6\x4\x2*.\a\x13\x2\x2+-\x5\x4\x3\x2,+\x3\x2"+
+		"\x2\x2-\x30\x3\x2\x2\x2.,\x3\x2\x2\x2./\x3\x2\x2\x2/\x34\x3\x2\x2\x2\x30"+
+		".\x3\x2\x2\x2\x31\x33\x5\b\x5\x2\x32\x31\x3\x2\x2\x2\x33\x36\x3\x2\x2"+
+		"\x2\x34\x32\x3\x2\x2\x2\x34\x35\x3\x2\x2\x2\x35\x37\x3\x2\x2\x2\x36\x34"+
+		"\x3\x2\x2\x2\x37\x38\a\x14\x2\x2\x38\v\x3\x2\x2\x2\a\xF\x15#.\x34";
 	public static readonly ATN _ATN =
 		new ATNDeserializer().Deserialize(_serializedATN.ToCharArray());
 }

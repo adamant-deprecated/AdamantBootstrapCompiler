@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\data\projects\adamant-lang\Adamant.Compiler\Compiler\Antlr\Adamant.g4 by ANTLR 4.5.1
+// Generated from AdamantParser.g4 by ANTLR 4.5.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -29,7 +29,7 @@ using IToken = Antlr4.Runtime.IToken;
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.5.1")]
 [System.CLSCompliant(false)]
-public interface IAdamantVisitor<Result> : IParseTreeVisitor<Result> {
+public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AdamantParser.compilationUnit"/>.
 	/// </summary>

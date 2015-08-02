@@ -1,10 +1,9 @@
-grammar Adamant;
-
-import AdamantPreprocessor;
+parser grammar AdamantParser;
 
 options
 {
 	language=CSharp;
+	tokenVocab=AdamantLexer;
 }
 
 compilationUnit
