@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Adamant.Compiler.Antlr;
+using Antlr4.Runtime;
 
 namespace Adamant.Compiler.Console
 {
@@ -10,6 +7,13 @@ namespace Adamant.Compiler.Console
 	{
 		static void Main(string[] args)
 		{
+			var filename = args[0];
+			var stream = new AntlrFileStream(filename);
+			var lexer = new AdamantLexer(stream);
+			var tokens = new CommonTokenStream(lexer);
+			var parser = new AdamantParser(tokens);
+			parser.BuildParseTree = true;
+			var tree = parser.compilationUnit();
 		}
 	}
 }

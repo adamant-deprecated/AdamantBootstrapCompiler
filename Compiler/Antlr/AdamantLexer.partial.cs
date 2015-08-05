@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Antlr4.Runtime;
 
 namespace Adamant.Compiler.Antlr
 {
@@ -25,8 +26,14 @@ namespace Adamant.Compiler.Antlr
 		#region Preprocessor Actions
 		private void Preprocess()
 		{
-
-		}
+			var directive = Token.Text;
+			var stream = new AntlrInputStream(directive);
+			var lexer = new PreprocessorLineLexer(stream);
+			var tokens = new CommonTokenStream(lexer);
+			var parser = new PreprocessorLineParser(tokens);
+			parser.BuildParseTree = true;
+			var tree = parser.preprocessorLine();
+        }
 		#endregion
 	}
 }
