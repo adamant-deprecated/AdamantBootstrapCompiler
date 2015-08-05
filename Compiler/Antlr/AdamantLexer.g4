@@ -2,7 +2,7 @@ lexer grammar AdamantLexer;
 
 import AdamantCommon; // defines Whitespace, Newline and InputChar
 
-channels {DocComments, Preprocessor}
+channels { DocComments }
 
 options
 {
@@ -48,19 +48,44 @@ PreprocessorLineInSkipped
 	;
 
 // And switch back to default mode so rest of file is correct
-//mode DEFAULT_MODE;
+mode DEFAULT_MODE;
 
 //*************
 // Keywords
 //*************
 Using : 'using';
 Namespace : 'namespace';
+Class : 'class';
+New : 'new';
+Operator : 'operator';
+This : 'this';
+Return : 'return';
+Uninitialized : 'uninitialized';
+// Conversion
+Implicit : 'implicit';
+Explicit : 'explicit';
+Conversion : 'conversion';
+// Access modifiers
+Public : 'public';
+Private : 'private';
+Protected : 'protected;
+// Safety
+Safe : 'safe';
+Unsafe : 'unsafe
+// Ownership
+Own : 'own';
+Mutable : 'mut';
+
 
 //*************
 // Literals
 //*************
-True : 'true';
-False : 'false';
+BooleanLiteral
+	: 'true'
+	| 'false'
+	;
+
+NullLiteral : 'null';
 
 // must be defined after all keywords so it will not match a keyword
 Identifier
@@ -74,11 +99,21 @@ EscapedIdentifier
 
 // Operators
 Semicolon : ';';
+Colon : ':';
 Dot : '.';
 LeftBrace : '{';
 RightBrace : '}';
+LeftAngle: '<';
+RightAngle: '>';
+LeftBracket : '[';
+RightBracket : ']';
+Asterisk : '*';
+AtSign : '@';
+AddressOf : '&';
+Returns : '->';
+Coalesce : '??'; // TODO this may need to be handled in the grammar level
+IsNull : '?';
+Equal : '==';
+NotEqual : '!=';
 
-fragment BooleanLiteral
-	: True
-	| False
-	;
+Unknown : .; // An error catch rule for everything else

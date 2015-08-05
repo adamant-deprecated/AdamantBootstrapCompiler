@@ -26,6 +26,7 @@ namespace Adamant.Compiler.Antlr
 		#region Preprocessor Actions
 		private void Preprocess()
 		{
+			// TODO check that directive is first thing on the line
 			var directive = Token.Text;
 			var stream = new AntlrInputStream(directive);
 			var lexer = new PreprocessorLineLexer(stream);
