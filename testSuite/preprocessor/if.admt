@@ -1,0 +1,9 @@
+
+#define SYMBOL
+
+#if SYMBOL
+	// TODO can we put something here to prove this was handled?
+	using System;
+#else
+	#error this error should not be reported
+#endif

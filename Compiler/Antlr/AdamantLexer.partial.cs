@@ -27,7 +27,7 @@ namespace Adamant.Compiler.Antlr
 		private void Preprocess()
 		{
 			// TODO check that directive is first thing on the line
-			var directive = Token.Text;
+			var directive = Text;
 			var stream = new AntlrInputStream(directive);
 			var lexer = new PreprocessorLineLexer(stream);
 			var tokens = new CommonTokenStream(lexer);

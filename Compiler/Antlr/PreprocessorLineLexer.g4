@@ -12,19 +12,19 @@ SingleLineComment
 	;
 
 // Directives
-Define : '#' Whitespace 'define';
-Undefine : '#' Whitespace 'undefine';
-If : '#' Whitespace 'if';
-ElseIf : '#' Whitespace 'elseif';
-Else : '#' Whitespace 'else';
-EndIf : '#' Whitespace 'endif';
-Line : '#' Whitespace 'line' -> mode(LINE);
-Error : '#' Whitespace 'error' -> mode(MESSAGE);
-Warning : '#' Whitespace 'warning' -> mode(MESSAGE);
-Region : '#' Whitespace 'region' -> mode(MESSAGE);
-EndRegion : '#' Whitespace 'endregion' -> mode(MESSAGE);
-PragmaWarning : '#' Whitespace 'pragma' Whitespace 'warning' Whitespace -> mode(PRAGMA_WARNING);
-Pragma : '#' Whitespace 'pragma' -> mode(MESSAGE);
+Define : '#' Whitespace? 'define';
+Undefine : '#' Whitespace? 'undefine';
+If : '#' Whitespace? 'if';
+ElseIf : '#' Whitespace? 'elseif';
+Else : '#' Whitespace? 'else';
+EndIf : '#' Whitespace? 'endif';
+Line : '#' Whitespace? 'line' -> mode(LINE);
+Error : '#' Whitespace? 'error' -> mode(MESSAGE);
+Warning : '#' Whitespace? 'warning' -> mode(MESSAGE);
+Region : '#' Whitespace? 'region' -> mode(MESSAGE);
+EndRegion : '#' Whitespace? 'endregion' -> mode(MESSAGE);
+PragmaWarning : '#' Whitespace? 'pragma' Whitespace 'warning' Whitespace -> mode(PRAGMA_WARNING);
+Pragma : '#' Whitespace? 'pragma' -> mode(MESSAGE);
 
 BooleanLiteral
 	: 'true'
@@ -45,7 +45,7 @@ NotEqual : '!=';
 LeftParen : '(';
 RightParen : ')';
 
-mode LINE;
+mode LINE; // TODO eliminate this mode
 
 LINE_Whitespace
 	: Whitespace -> type(Whitespace), skip
@@ -73,7 +73,7 @@ fragment FileNameChar
 	: ~["]
 	;
 
-mode PRAGMA_WARNING;
+mode PRAGMA_WARNING; // TODO eliminate this mode
 
 PRAGMA_WARNING_Whitespace
 	: Whitespace -> type(Whitespace), skip
