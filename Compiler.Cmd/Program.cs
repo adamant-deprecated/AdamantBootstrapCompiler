@@ -21,7 +21,7 @@ namespace Adamant.Compiler.Cmd
 			{
 				tokens.Fill();
 				foreach(var token in tokens.GetTokens())
-					Console.WriteLine(token);
+					Console.WriteLine(Format(token));
 				return;
 			}
 			var parser = new AdamantParser(tokens);
@@ -42,5 +42,15 @@ namespace Adamant.Compiler.Cmd
 				Action = tokenize ? CmdAction.Tokenize : CmdAction.Compile,
 			};
 		}
+
+		private static string Format(IToken token)
+		{
+			var channel = token.Channel > 0 ? ",channel=" + ChannelNames[token.Channel] : "";
+			var text = token.Text != null ? "'" + token.Text.Replace("\n", "\\n").Replace("\r", "\\r").Replace("\n", "\\t") + "'" : "<no text>";
+			var type = AdamantLexer.DefaultVocabulary.GetSymbolicName(token.Type);
+			return text + ":" + type + channel + " @" + token.Line + ":" + token.Column;
+		}
+
+		private static readonly string[] ChannelNames = { "DEFAULT", "1", "DocComments" };
 	}
 }
