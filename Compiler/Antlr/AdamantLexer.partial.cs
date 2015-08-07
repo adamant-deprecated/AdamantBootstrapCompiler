@@ -23,10 +23,11 @@ namespace Adamant.Compiler.Antlr
 			symbols[symbol] = false;
 		}
 
-		#region Preprocessor Actions
 		private void Preprocess()
 		{
-			// TODO check that directive is first thing on the line
+			if(TokenStartColumn != 0)
+				NotifyErrorListeners("Preprocessor directives must be the first non-whitespace character on the line");
+
 			var directive = Text;
 			var stream = new AntlrInputStream(directive);
 			var lexer = new PreprocessorLineLexer(stream);
@@ -34,7 +35,20 @@ namespace Adamant.Compiler.Antlr
 			var parser = new PreprocessorLineParser(tokens);
 			parser.BuildParseTree = true;
 			var tree = parser.preprocessorLine();
+			// TODO visit the tree and apply the action
         }
-		#endregion
+
+		public void NotifyErrorListeners(string msg)
+		{
+			NotifyErrorListeners(msg, null);
+		}
+
+		public virtual void NotifyErrorListeners(string msg, RecognitionException e)
+		{
+			int line = TokenStartLine;
+			int charPositionInLine = TokenStartColumn;
+			var antlrErrorListener = ErrorListenerDispatch;
+			antlrErrorListener.SyntaxError(this, Type, line, charPositionInLine, msg, e);
+		}
 	}
 }
