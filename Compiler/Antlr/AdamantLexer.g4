@@ -32,19 +32,27 @@ BlockComment
 // Preprocessor
 //*************
 PreprocessorLine
-	: Whitespace* '#' InputChar* { Preprocess(); } -> skip
+	: Whitespace? '#' InputChar* { Preprocess(); } -> skip
 	;
 
-// Here we use a mode to handle preprocessor sections that are skipped
+// Here we use a mode to handle preprocessor sections that are skipped, this mode will be entered by the preprocessor code
 mode PREPROCESSOR_SKIP;
-
-PreprocessorSkippedSection
-	: InputChar+? Whitespace* '#' 
-	;
 
 PreprocessorLineInSkipped
 	// the type here prevents it from creatig another token type
-	: Whitespace* '#' InputChar* { Preprocess(); } -> type(PreprocessorLine), skip 
+	: Whitespace? '#' InputChar* { Preprocess(); } -> type(PreprocessorLine), skip
+	;
+
+PreprocessorSkippedSection
+	// anything except newline or #
+	// newline is excluded becuase otherwise a multiline match could swollow the leading whitespace we need to check
+	// that preprocessor directives are the first thing on the line
+	: ~[\u000D\u000A\u0085\u2028\u2029#]+ -> skip
+	;
+
+PreprocessorSkippedNewline
+	// the type here prevents it from creatig another token type
+	: Newline -> type(Newline), skip
 	;
 
 // And switch back to default mode so rest of file is correct
@@ -68,14 +76,13 @@ Conversion : 'conversion';
 // Access modifiers
 Public : 'public';
 Private : 'private';
-Protected : 'protected;
+Protected : 'protected';
 // Safety
 Safe : 'safe';
-Unsafe : 'unsafe
+Unsafe : 'unsafe';
 // Ownership
 Own : 'own';
 Mutable : 'mut';
-
 
 //*************
 // Literals

@@ -33,9 +33,14 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 public partial class AdamantParser : Parser {
 	public const int
 		SingleLineDocComment=1, BlockDocComment=2, SingleLineComment=3, BlockComment=4, 
-		PreprocessorLine=5, Whitespace=6, NewLine=7, PreprocessorSkippedSection=8, 
-		Using=9, Namespace=10, True=11, False=12, Identifier=13, EscapedIdentifier=14, 
-		Semicolon=15, Dot=16, LeftBrace=17, RightBrace=18;
+		PreprocessorLine=5, Whitespace=6, Newline=7, PreprocessorSkippedSection=8, 
+		Using=9, Namespace=10, Class=11, New=12, Operator=13, This=14, Return=15, 
+		Uninitialized=16, Implicit=17, Explicit=18, Conversion=19, Public=20, 
+		Private=21, Protected=22, Safe=23, Unsafe=24, Own=25, Mutable=26, BooleanLiteral=27, 
+		NullLiteral=28, Identifier=29, EscapedIdentifier=30, Semicolon=31, Colon=32, 
+		Dot=33, LeftBrace=34, RightBrace=35, LeftAngle=36, RightAngle=37, LeftBracket=38, 
+		RightBracket=39, Asterisk=40, AtSign=41, AddressOf=42, Returns=43, Coalesce=44, 
+		IsNull=45, Equal=46, NotEqual=47, Unknown=48;
 	public const int
 		RULE_compilationUnit = 0, RULE_usingStatement = 1, RULE_namespaceName = 2, 
 		RULE_namespaceMemberDeclaration = 3, RULE_namespaceDeclaration = 4;
@@ -46,13 +51,22 @@ public partial class AdamantParser : Parser {
 
 	private static readonly string[] _LiteralNames = {
 		null, null, null, null, null, null, null, null, null, "'using'", "'namespace'", 
-		"'true'", "'false'", null, null, "';'", "'.'", "'{'", "'}'"
+		"'class'", "'new'", "'operator'", "'this'", "'return'", "'uninitialized'", 
+		"'implicit'", "'explicit'", "'conversion'", "'public'", "'private'", "'protected'", 
+		"'safe'", "'unsafe'", "'own'", "'mut'", null, "'null'", null, null, "';'", 
+		"':'", "'.'", "'{'", "'}'", "'<'", "'>'", "'['", "']'", "'*'", "'@'", 
+		"'&'", "'->'", "'??'", "'?'", "'=='", "'!='"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, "SingleLineDocComment", "BlockDocComment", "SingleLineComment", 
-		"BlockComment", "PreprocessorLine", "Whitespace", "NewLine", "PreprocessorSkippedSection", 
-		"Using", "Namespace", "True", "False", "Identifier", "EscapedIdentifier", 
-		"Semicolon", "Dot", "LeftBrace", "RightBrace"
+		"BlockComment", "PreprocessorLine", "Whitespace", "Newline", "PreprocessorSkippedSection", 
+		"Using", "Namespace", "Class", "New", "Operator", "This", "Return", "Uninitialized", 
+		"Implicit", "Explicit", "Conversion", "Public", "Private", "Protected", 
+		"Safe", "Unsafe", "Own", "Mutable", "BooleanLiteral", "NullLiteral", "Identifier", 
+		"EscapedIdentifier", "Semicolon", "Colon", "Dot", "LeftBrace", "RightBrace", 
+		"LeftAngle", "RightAngle", "LeftBracket", "RightBracket", "Asterisk", 
+		"AtSign", "AddressOf", "Returns", "Coalesce", "IsNull", "Equal", "NotEqual", 
+		"Unknown"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -399,7 +413,7 @@ public partial class AdamantParser : Parser {
 	}
 
 	public static readonly string _serializedATN =
-		"\x3\x430\xD6D1\x8206\xAD2D\x4417\xAEF1\x8D80\xAADD\x3\x14:\x4\x2\t\x2"+
+		"\x3\x430\xD6D1\x8206\xAD2D\x4417\xAEF1\x8D80\xAADD\x3\x32:\x4\x2\t\x2"+
 		"\x4\x3\t\x3\x4\x4\t\x4\x4\x5\t\x5\x4\x6\t\x6\x3\x2\a\x2\xE\n\x2\f\x2\xE"+
 		"\x2\x11\v\x2\x3\x2\a\x2\x14\n\x2\f\x2\xE\x2\x17\v\x2\x3\x2\x3\x2\x3\x3"+
 		"\x3\x3\x3\x3\x3\x3\x3\x4\x3\x4\x3\x4\a\x4\"\n\x4\f\x4\xE\x4%\v\x4\x3\x5"+
@@ -411,14 +425,14 @@ public partial class AdamantParser : Parser {
 		"\xF\x3\x2\x2\x2\x12\x14\x5\b\x5\x2\x13\x12\x3\x2\x2\x2\x14\x17\x3\x2\x2"+
 		"\x2\x15\x13\x3\x2\x2\x2\x15\x16\x3\x2\x2\x2\x16\x18\x3\x2\x2\x2\x17\x15"+
 		"\x3\x2\x2\x2\x18\x19\a\x2\x2\x3\x19\x3\x3\x2\x2\x2\x1A\x1B\a\v\x2\x2\x1B"+
-		"\x1C\x5\x6\x4\x2\x1C\x1D\a\x11\x2\x2\x1D\x5\x3\x2\x2\x2\x1E#\a\xF\x2\x2"+
-		"\x1F \a\x12\x2\x2 \"\a\xF\x2\x2!\x1F\x3\x2\x2\x2\"%\x3\x2\x2\x2#!\x3\x2"+
+		"\x1C\x5\x6\x4\x2\x1C\x1D\a!\x2\x2\x1D\x5\x3\x2\x2\x2\x1E#\a\x1F\x2\x2"+
+		"\x1F \a#\x2\x2 \"\a\x1F\x2\x2!\x1F\x3\x2\x2\x2\"%\x3\x2\x2\x2#!\x3\x2"+
 		"\x2\x2#$\x3\x2\x2\x2$\a\x3\x2\x2\x2%#\x3\x2\x2\x2&\'\x5\n\x6\x2\'\t\x3"+
-		"\x2\x2\x2()\a\f\x2\x2)*\x5\x6\x4\x2*.\a\x13\x2\x2+-\x5\x4\x3\x2,+\x3\x2"+
-		"\x2\x2-\x30\x3\x2\x2\x2.,\x3\x2\x2\x2./\x3\x2\x2\x2/\x34\x3\x2\x2\x2\x30"+
+		"\x2\x2\x2()\a\f\x2\x2)*\x5\x6\x4\x2*.\a$\x2\x2+-\x5\x4\x3\x2,+\x3\x2\x2"+
+		"\x2-\x30\x3\x2\x2\x2.,\x3\x2\x2\x2./\x3\x2\x2\x2/\x34\x3\x2\x2\x2\x30"+
 		".\x3\x2\x2\x2\x31\x33\x5\b\x5\x2\x32\x31\x3\x2\x2\x2\x33\x36\x3\x2\x2"+
 		"\x2\x34\x32\x3\x2\x2\x2\x34\x35\x3\x2\x2\x2\x35\x37\x3\x2\x2\x2\x36\x34"+
-		"\x3\x2\x2\x2\x37\x38\a\x14\x2\x2\x38\v\x3\x2\x2\x2\a\xF\x15#.\x34";
+		"\x3\x2\x2\x2\x37\x38\a%\x2\x2\x38\v\x3\x2\x2\x2\a\xF\x15#.\x34";
 	public static readonly ATN _ATN =
 		new ATNDeserializer().Deserialize(_serializedATN.ToCharArray());
 }

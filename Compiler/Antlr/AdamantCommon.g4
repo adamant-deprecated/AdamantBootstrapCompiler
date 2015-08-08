@@ -13,7 +13,7 @@ fragment WhitespaceChar
 	| '\u000C' // Form Feed Character (U+000C)
 	;
 
-NewLine
+Newline
 	: ('\u000D' // Carriage Return (U+000D)
 	| '\u000A' // Line Feed (U+000A)
 	| '\u000D' '\u000A' // Carriage Return (U+000D) Followed By Line Feed Character (U+000A)

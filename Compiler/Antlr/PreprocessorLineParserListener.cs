@@ -70,6 +70,16 @@ public interface IPreprocessorLineParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitUndefine([NotNull] PreprocessorLineParser.UndefineContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="PreprocessorLineParser.conditionalSymbol"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterConditionalSymbol([NotNull] PreprocessorLineParser.ConditionalSymbolContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="PreprocessorLineParser.conditionalSymbol"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitConditionalSymbol([NotNull] PreprocessorLineParser.ConditionalSymbolContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="PreprocessorLineParser.ifDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -110,15 +120,89 @@ public interface IPreprocessorLineParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitEndif([NotNull] PreprocessorLineParser.EndifContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="PreprocessorLineParser.expression"/>.
+	/// Enter a parse tree produced by the <c>Not</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression([NotNull] PreprocessorLineParser.ExpressionContext context);
+	void EnterNot([NotNull] PreprocessorLineParser.NotContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="PreprocessorLineParser.expression"/>.
+	/// Exit a parse tree produced by the <c>Not</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression([NotNull] PreprocessorLineParser.ExpressionContext context);
+	void ExitNot([NotNull] PreprocessorLineParser.NotContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>Variable</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVariable([NotNull] PreprocessorLineParser.VariableContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>Variable</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVariable([NotNull] PreprocessorLineParser.VariableContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>Or</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOr([NotNull] PreprocessorLineParser.OrContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>Or</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOr([NotNull] PreprocessorLineParser.OrContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>And</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAnd([NotNull] PreprocessorLineParser.AndContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>And</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAnd([NotNull] PreprocessorLineParser.AndContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>BooleanValue</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterBooleanValue([NotNull] PreprocessorLineParser.BooleanValueContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>BooleanValue</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitBooleanValue([NotNull] PreprocessorLineParser.BooleanValueContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>Grouping</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterGrouping([NotNull] PreprocessorLineParser.GroupingContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>Grouping</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitGrouping([NotNull] PreprocessorLineParser.GroupingContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>Equality</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterEquality([NotNull] PreprocessorLineParser.EqualityContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>Equality</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitEquality([NotNull] PreprocessorLineParser.EqualityContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="PreprocessorLineParser.line"/>.
 	/// </summary>
@@ -150,24 +234,52 @@ public interface IPreprocessorLineParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitWarning([NotNull] PreprocessorLineParser.WarningContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="PreprocessorLineParser.region"/>.
+	/// Enter a parse tree produced by the <c>RegionBegin</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.region"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterRegion([NotNull] PreprocessorLineParser.RegionContext context);
+	void EnterRegionBegin([NotNull] PreprocessorLineParser.RegionBeginContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="PreprocessorLineParser.region"/>.
+	/// Exit a parse tree produced by the <c>RegionBegin</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.region"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitRegion([NotNull] PreprocessorLineParser.RegionContext context);
+	void ExitRegionBegin([NotNull] PreprocessorLineParser.RegionBeginContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="PreprocessorLineParser.pragma"/>.
+	/// Enter a parse tree produced by the <c>RegionEnd</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.region"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterPragma([NotNull] PreprocessorLineParser.PragmaContext context);
+	void EnterRegionEnd([NotNull] PreprocessorLineParser.RegionEndContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="PreprocessorLineParser.pragma"/>.
+	/// Exit a parse tree produced by the <c>RegionEnd</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.region"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitPragma([NotNull] PreprocessorLineParser.PragmaContext context);
+	void ExitRegionEnd([NotNull] PreprocessorLineParser.RegionEndContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>PragmaWarning</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.pragma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterPragmaWarning([NotNull] PreprocessorLineParser.PragmaWarningContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>PragmaWarning</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.pragma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitPragmaWarning([NotNull] PreprocessorLineParser.PragmaWarningContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>PragmaUnknown</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.pragma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterPragmaUnknown([NotNull] PreprocessorLineParser.PragmaUnknownContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>PragmaUnknown</c>
+	/// labeled alternative in <see cref="PreprocessorLineParser.pragma"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitPragmaUnknown([NotNull] PreprocessorLineParser.PragmaUnknownContext context);
 }
 } // namespace Adamant.Compiler.Antlr

@@ -1,9 +1,13 @@
 
 #define SYMBOL
 
+BeforeIf
+
 #if SYMBOL
-	// TODO can we put something here to prove this was handled?
-	using System;
+	InIf
 #else
+	InElse
 	#error this error should not be reported
 #endif
+
+AfterIf

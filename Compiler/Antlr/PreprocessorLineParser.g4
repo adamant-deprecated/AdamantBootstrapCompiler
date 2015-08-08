@@ -34,43 +34,49 @@ directive
 
 // Declaration Directives
 define
-	: Define ConditionalSymbol { PreprocessorDefine(); }
+	: Define conditionalSymbol
 	;
 
 undefine
-	: Undefine ConditionalSymbol { PreprocessorUndefine(); }
+	: Undefine conditionalSymbol
+	;
+
+conditionalSymbol
+	: ConditionalSymbol
+	| LineMode
+	| WarningAction
 	;
 
 // Conditional Directives
 ifDecl // can't use if
-	: If expression { PreprocessorIf(); }
+	: If expression
 	;
 
 elseif
-	: ElseIf expression { PreprocessorElseIf(); }
+	: ElseIf expression
 	;
 
 elseDecl // can't use else
-	: Else { PreprocessorElse(); }
+	: Else
 	;
 
 endif
-	: EndIf { PreprocessorEndif(); }
+	: EndIf
 	;
 
 expression
-	: '!' expression
-	| expression '&&' expression
-	| expression '||' expression
-	| expression ('=='|'!=') expression
-	| '(' expression ')'
-	| ConditionalSymbol
-	| BooleanLiteral
+	: '!' expression							#Not
+	| expression '&&' expression				#And
+	| expression '||' expression				#Or
+	| expression op=('=='|'!=') expression		#Equality
+	| '(' expression ')'						#Grouping
+	| conditionalSymbol							#Variable
+	| BooleanLiteral							#BooleanValue
 	;
 
-// Line directive
+// Line Directive
 line
-	: Line LineMode | (LineNumber FileName?)
+	: Line LineMode | (Number FileName?)
 	;
 
 // Diagnostic Directives
@@ -84,11 +90,12 @@ warning
 
 // Region Directives
 region
-	: Region Message?
-	| EndRegion Message?
+	: Region Message?							#RegionBegin
+	| EndRegion Message?						#RegionEnd
 	;
 
+// Pragma Directives
 pragma
-	: PragmaWarning WarningAction (WarningNumber (',' WarningNumber)*)?
-	| Pragma Message?
+	: PragmaWarning WarningAction (warningNumbers+=Number (',' warningNumbers+=Number)*)?	#PragmaWarning
+	| Pragma Message?										#PragmaUnknown
 	;

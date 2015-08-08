@@ -1,27 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Adamant.Compiler.Preprocessor;
 using Antlr4.Runtime;
 
 namespace Adamant.Compiler.Antlr
 {
 	public partial class AdamantLexer
 	{
-		// While we wait for answer to ANTLR issue #965 we will just declare these
-		//private int _channel = 0;
+		private readonly PreprocessorState preprocessorState = new PreprocessorState();
+		private PreprocessorVisitor preprocessorVisitor;
 
-		private IDictionary<string, bool> symbols = new Dictionary<string, bool>();
-
-		public void Define(string symbol)
-		{
-			symbols[symbol] = true;
-		}
-		public void Define(string symbol, bool defined)
-		{
-			symbols[symbol] = defined;
-		}
-		public void Undefine(string symbol)
-		{
-			symbols[symbol] = false;
-		}
+		public PreprocessorState PreprocessorState => preprocessorState;
 
 		private void Preprocess()
 		{
@@ -35,8 +22,10 @@ namespace Adamant.Compiler.Antlr
 			var parser = new PreprocessorLineParser(tokens);
 			parser.BuildParseTree = true;
 			var tree = parser.preprocessorLine();
-			// TODO visit the tree and apply the action
-        }
+			if(preprocessorVisitor == null) preprocessorVisitor = new PreprocessorVisitor(preprocessorState); //annoyingly can't use constructor
+			tree.Accept(preprocessorVisitor);
+			CurrentMode = preprocessorState.InSkippedSection ? PREPROCESSOR_SKIP : DefaultMode;
+		}
 
 		public void NotifyErrorListeners(string msg)
 		{

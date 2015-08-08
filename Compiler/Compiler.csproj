@@ -68,13 +68,21 @@
     <Compile Include="Antlr\PreprocessorLineParser.cs">
       <DependentUpon>PreprocessorLineParser.g4</DependentUpon>
     </Compile>
-    <Compile Include="Antlr\PreprocessorLineParser.partial.cs" />
     <Compile Include="Antlr\PreprocessorLineParserBaseListener.cs">
+      <DependentUpon>PreprocessorLineParser.g4</DependentUpon>
+    </Compile>
+    <Compile Include="Antlr\PreprocessorLineParserBaseVisitor.cs">
       <DependentUpon>PreprocessorLineParser.g4</DependentUpon>
     </Compile>
     <Compile Include="Antlr\PreprocessorLineParserListener.cs">
       <DependentUpon>PreprocessorLineParser.g4</DependentUpon>
     </Compile>
+    <Compile Include="Antlr\PreprocessorLineParserVisitor.cs">
+      <DependentUpon>PreprocessorLineParser.g4</DependentUpon>
+    </Compile>
+    <Compile Include="Preprocessor\Conditional.cs" />
+    <Compile Include="Preprocessor\PreprocessorState.cs" />
+    <Compile Include="Preprocessor\PreprocessorVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -97,13 +105,19 @@
     </None>
     <None Include="Antlr\Unicode.g4" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{2a12091a-5ced-4393-a1fd-a0ff26899e5d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)Antlr
 CALL $(SolutionDir)tools\antlr4.bat AdamantLexer.g4 -package Adamant.Compiler.Antlr
 CALL $(SolutionDir)tools\antlr4.bat AdamantParser.g4 -visitor -package Adamant.Compiler.Antlr
 CALL $(SolutionDir)tools\antlr4.bat PreprocessorLineLexer.g4 -package Adamant.Compiler.Antlr
-CALL $(SolutionDir)tools\antlr4.bat PreprocessorLineParser.g4 -package Adamant.Compiler.Antlr</PreBuildEvent>
+CALL $(SolutionDir)tools\antlr4.bat PreprocessorLineParser.g4 -visitor -package Adamant.Compiler.Antlr</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
