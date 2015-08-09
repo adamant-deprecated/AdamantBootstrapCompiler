@@ -65,10 +65,28 @@ Using : 'using';
 Namespace : 'namespace';
 Class : 'class';
 New : 'new';
+Delete : 'delete';
 Operator : 'operator';
 This : 'this';
 Return : 'return';
 Uninitialized : 'uninitialized';
+Where : 'where';
+Var : 'var';
+Let : 'let';
+Static : 'static';
+Get : 'get';
+Set : 'set';
+Throw : 'throw';
+If : 'if';
+Else : 'else';
+Abstract : 'abstract';
+Params : 'params';
+For : 'for';
+Foreach : 'foreach';
+In : 'in';
+Ref : 'ref';
+Base : 'base';
+Const : 'const';
 // Conversion
 Implicit : 'implicit';
 Explicit : 'explicit';
@@ -77,6 +95,7 @@ Conversion : 'conversion';
 Public : 'public';
 Private : 'private';
 Protected : 'protected';
+Package : 'package';
 // Safety
 Safe : 'safe';
 Unsafe : 'unsafe';
@@ -92,7 +111,62 @@ BooleanLiteral
 	| 'false'
 	;
 
+IntLiteral
+	: [1-9] ('_'|DecimalDigit)*
+	| '0'
+	;
+
 NullLiteral : 'null';
+
+StringLiteral
+	: '"' (InputChar|'\"'|'\\')*? '"'
+	;
+
+// Operators
+Semicolon : ';';
+Colon : ':';
+Dot : '.';
+Comma : ',';
+Arrow : '->';
+Lambda : '=>';
+LeftBrace : '{';
+RightBrace : '}';
+LeftAngle: '<';
+RightAngle: '>';
+LeftBracket : '[';
+RightBracket : ']';
+LeftParen : '(';
+RightParen : ')';
+Asterisk : '*';
+AtSign : '@';
+AddressOf : '&';
+Coalesce : '??'; // TODO this may need to be handled in the grammar level
+IsNull : '?';
+Equal : '==';
+NotEqual : '<>';
+LessThanOrEqual : '<=';
+GreaterThanOrEqual : '>=';
+TypeList : '...';
+Plus : '+';
+Minus : '-';
+Divide : '/';
+And : 'and';
+Xor : 'xor';
+Or : 'or';
+Not : 'not';
+Increment : '++';
+Decrement : '--';
+
+Assign : '=';
+AddAssign : '+=';
+SubtractAssign : '-=';
+MultiplyAssign : '*=';
+DivideAssign : '/=';
+LeftShiftAssign : '<<=';
+RightShiftAssign : '>>=';
+AndAssign : 'and=';
+XorAssign : 'xor=';
+OrAssign : 'or=';
 
 // must be defined after all keywords so it will not match a keyword
 Identifier
@@ -100,27 +174,7 @@ Identifier
 	;
 
 EscapedIdentifier
-	: '@' Identifier
-	// | '@' Keyword // TODO is this needed?
+	: '@' IdentifierStartChar IdentifierPartChar*
 	;
-
-// Operators
-Semicolon : ';';
-Colon : ':';
-Dot : '.';
-LeftBrace : '{';
-RightBrace : '}';
-LeftAngle: '<';
-RightAngle: '>';
-LeftBracket : '[';
-RightBracket : ']';
-Asterisk : '*';
-AtSign : '@';
-AddressOf : '&';
-Returns : '->';
-Coalesce : '??'; // TODO this may need to be handled in the grammar level
-IsNull : '?';
-Equal : '==';
-NotEqual : '!=';
 
 Unknown : .; // An error catch rule for everything else
