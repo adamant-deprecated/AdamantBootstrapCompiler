@@ -122,7 +122,9 @@ StringLiteral
 	: '"' (InputChar|'\"'|'\\')*? '"'
 	;
 
+//*************
 // Operators
+//*************
 Semicolon : ';';
 Colon : ':';
 Dot : '.';
@@ -177,4 +179,8 @@ EscapedIdentifier
 	: '@' IdentifierStartChar IdentifierPartChar*
 	;
 
+//*************
+// Error Rules
+//*************
+BadNotEqual : '!=' { NotifyErrorListeners("Invalid operator, use '<>' for not equal instead of '!='"); } -> type(NotEqual);
 Unknown : .; // An error catch rule for everything else
