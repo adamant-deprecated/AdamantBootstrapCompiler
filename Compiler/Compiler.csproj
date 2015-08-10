@@ -84,6 +84,7 @@
     <Compile Include="Preprocessor\PreprocessorState.cs" />
     <Compile Include="Preprocessor\PreprocessorVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SyntaxCheckVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Antlr\AdamantCommon.g4" />

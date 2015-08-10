@@ -142,29 +142,17 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAttribute([NotNull] AdamantParser.AttributeContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.accessModifier"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.modifier"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAccessModifier([NotNull] AdamantParser.AccessModifierContext context) { }
+	public virtual void EnterModifier([NotNull] AdamantParser.ModifierContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.accessModifier"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.modifier"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAccessModifier([NotNull] AdamantParser.AccessModifierContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.typeModifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTypeModifier([NotNull] AdamantParser.TypeModifierContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.typeModifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTypeModifier([NotNull] AdamantParser.TypeModifierContext context) { }
+	public virtual void ExitModifier([NotNull] AdamantParser.ModifierContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.typeParameterList"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -430,18 +418,6 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitMethod([NotNull] AdamantParser.MethodContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.methodModifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterMethodModifier([NotNull] AdamantParser.MethodModifierContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.methodModifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitMethodModifier([NotNull] AdamantParser.MethodModifierContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.operatorOverload"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -513,18 +489,6 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitField([NotNull] AdamantParser.FieldContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.fieldModifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFieldModifier([NotNull] AdamantParser.FieldModifierContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.fieldModifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFieldModifier([NotNull] AdamantParser.FieldModifierContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.VariableDeclarationStatement"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -694,17 +658,305 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitLetDeclaration([NotNull] AdamantParser.LetDeclarationContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.expression"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.NullCheckExpression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpression([NotNull] AdamantParser.ExpressionContext context) { }
+	public virtual void EnterNullCheckExpression([NotNull] AdamantParser.NullCheckExpressionContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.expression"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.NullCheckExpression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpression([NotNull] AdamantParser.ExpressionContext context) { }
+	public virtual void ExitNullCheckExpression([NotNull] AdamantParser.NullCheckExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.StringLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterStringLiteralExpression([NotNull] AdamantParser.StringLiteralExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.StringLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitStringLiteralExpression([NotNull] AdamantParser.StringLiteralExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.XorExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterXorExpression([NotNull] AdamantParser.XorExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.XorExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitXorExpression([NotNull] AdamantParser.XorExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.UnaryExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterUnaryExpression([NotNull] AdamantParser.UnaryExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.UnaryExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitUnaryExpression([NotNull] AdamantParser.UnaryExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.OrExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOrExpression([NotNull] AdamantParser.OrExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.OrExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOrExpression([NotNull] AdamantParser.OrExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.IntLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterIntLiteralExpression([NotNull] AdamantParser.IntLiteralExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.IntLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitIntLiteralExpression([NotNull] AdamantParser.IntLiteralExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.ThisExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterThisExpression([NotNull] AdamantParser.ThisExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.ThisExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitThisExpression([NotNull] AdamantParser.ThisExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.AndExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAndExpression([NotNull] AdamantParser.AndExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.AndExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAndExpression([NotNull] AdamantParser.AndExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.AssignmentExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExpression([NotNull] AdamantParser.AssignmentExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.AssignmentExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExpression([NotNull] AdamantParser.AssignmentExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.BooleanLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBooleanLiteralExpression([NotNull] AdamantParser.BooleanLiteralExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.BooleanLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBooleanLiteralExpression([NotNull] AdamantParser.BooleanLiteralExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.EqualityExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterEqualityExpression([NotNull] AdamantParser.EqualityExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.EqualityExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitEqualityExpression([NotNull] AdamantParser.EqualityExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.MultiplicativeExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMultiplicativeExpression([NotNull] AdamantParser.MultiplicativeExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.MultiplicativeExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMultiplicativeExpression([NotNull] AdamantParser.MultiplicativeExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.CallExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterCallExpression([NotNull] AdamantParser.CallExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.CallExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitCallExpression([NotNull] AdamantParser.CallExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.NullLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNullLiteralExpression([NotNull] AdamantParser.NullLiteralExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.NullLiteralExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNullLiteralExpression([NotNull] AdamantParser.NullLiteralExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.AdditiveExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAdditiveExpression([NotNull] AdamantParser.AdditiveExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.AdditiveExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAdditiveExpression([NotNull] AdamantParser.AdditiveExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.IfExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterIfExpression([NotNull] AdamantParser.IfExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.IfExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitIfExpression([NotNull] AdamantParser.IfExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.PointerMemberExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPointerMemberExpression([NotNull] AdamantParser.PointerMemberExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.PointerMemberExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPointerMemberExpression([NotNull] AdamantParser.PointerMemberExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.NewExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNewExpression([NotNull] AdamantParser.NewExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.NewExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNewExpression([NotNull] AdamantParser.NewExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.UninitializedExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterUninitializedExpression([NotNull] AdamantParser.UninitializedExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.UninitializedExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitUninitializedExpression([NotNull] AdamantParser.UninitializedExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.VariableExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVariableExpression([NotNull] AdamantParser.VariableExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.VariableExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVariableExpression([NotNull] AdamantParser.VariableExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.ShiftExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterShiftExpression([NotNull] AdamantParser.ShiftExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.ShiftExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitShiftExpression([NotNull] AdamantParser.ShiftExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.MemberExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMemberExpression([NotNull] AdamantParser.MemberExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.MemberExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMemberExpression([NotNull] AdamantParser.MemberExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.ComparativeExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterComparativeExpression([NotNull] AdamantParser.ComparativeExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.ComparativeExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitComparativeExpression([NotNull] AdamantParser.ComparativeExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.CoalesceExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterCoalesceExpression([NotNull] AdamantParser.CoalesceExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.CoalesceExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitCoalesceExpression([NotNull] AdamantParser.CoalesceExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.ArrayAccessExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterArrayAccessExpression([NotNull] AdamantParser.ArrayAccessExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.ArrayAccessExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitArrayAccessExpression([NotNull] AdamantParser.ArrayAccessExpressionContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

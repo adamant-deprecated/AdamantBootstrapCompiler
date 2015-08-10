@@ -4,5 +4,6 @@
 	{
 		Compile = 0,
 		Tokenize = 1,
+		PrintTree = 2,
 	}
 }

@@ -19,8 +19,8 @@ usingStatement
 
 identifier
 	: Identifier
-	| Operator
 	| EscapedIdentifier
+	| 'conversion'
 	;
 
 namespaceName
@@ -38,29 +38,33 @@ namespaceDeclaration
 	;
 
 typeDeclaration
-	: attribute* accessModifier typeModifier* 'class' identifier typeParameterList? typeBase? typeParameterConstraintClause* '{' typeMember* '}'
+	: attribute* modifier* 'class' identifier typeParameterList? typeBase? typeParameterConstraintClause* '{' typeMember* '}'
 	;
 
 globalDeclaration
-	: attribute* accessModifier fieldModifier* 'var' identifier (':' type)? ('=' expression)? ';'
-	| attribute* accessModifier fieldModifier* 'let' identifier (':' type)? '=' expression ';'
+	: attribute* modifier* 'var' identifier (':' type)? ('=' expression)? ';'
+	| attribute* modifier* 'let' identifier (':' type)? '=' expression ';'
 	;
 
 attribute
 	: EscapedIdentifier ('(' ')')?
 	;
 
-accessModifier
-	: 'public'
-	| 'private'
-	| 'protected'
-	| 'package'
-	;
-
-typeModifier
-	: 'safe'
-	| 'unsafe'
-	| 'abstract'
+modifier
+	: Symbol='public'
+	| Symbol='private'
+	| Symbol='protected'
+	| Symbol='package'
+	| Symbol='safe'
+	| Symbol='unsafe'
+	| Symbol='abstract'
+	| Symbol='partial'
+	| Symbol='implicit'
+	| Symbol='explicit'
+	| Symbol='sealed'
+	| Symbol='override'
+	| Symbol='static'
+	| Symbol='const'
 	;
 
 typeParameterList
@@ -102,7 +106,6 @@ funcTypeParameter
 	: parameterModifier* type
 	;
 
-
 constExpression
 	: IntLiteral
 	| StringLiteral
@@ -123,9 +126,9 @@ typeParameterConstraint
 typeMember
 	: constructor
 	| destructor
+	| conversionMethod
 	| method
 	| operatorOverload
-	| conversionMethod
 	| field
 	| property
 	;
@@ -147,7 +150,7 @@ parameterModifier
 	;
 
 constructor
-	: attribute* accessModifier methodModifier* 'new' identifier? parameterList constructorInitializer? methodBody
+	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody
 	;
 
 constructorInitializer
@@ -161,31 +164,23 @@ argumentList
 	;
 
 destructor
-	: attribute* accessModifier methodModifier* 'delete' parameterList methodBody
+	: attribute* modifier* 'delete' parameterList methodBody
 	;
 
 method
-	: attribute* accessModifier methodModifier* identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
-	;
-
-methodModifier
-	: 'safe'
-	| 'unsafe'
-	| 'implicit'
-	| 'explicit'
-	| 'abstract'
+	: attribute* modifier* identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
 	;
 
 operatorOverload
-	: attribute* accessModifier methodModifier* 'operator' overloadableOperator parameterList '=>' type methodBody
+	: attribute* modifier* 'operator' overloadableOperator parameterList '=>' type methodBody
 	;
 
 conversionMethod
-	: attribute* accessModifier methodModifier* 'conversion' typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
+	: attribute* modifier* 'conversion' typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
 	;
 
 property
-	: attribute* accessModifier methodModifier* ('get'|'set') identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
+	: attribute* modifier* ('get'|'set') identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
 	;
 
 methodBody
@@ -206,15 +201,8 @@ overloadableOperator
 	;
 
 field
-	: attribute* accessModifier fieldModifier* identifier (':' type)? ('=' expression)? ';'
-	;
-
-fieldModifier
-	: 'unsafe'
-	| 'safe'
-	| 'static'
-	| 'let'
-	| 'const'
+	: attribute* modifier* identifier (':' type)? ('=' expression)? ';'
+	| attribute* modifier* 'let' identifier (':' type)? '=' expression ';'
 	;
 
 statement
@@ -227,8 +215,8 @@ statement
 	| 'return' expression ';'								#ReturnStatement
 	| 'throw' expression ';'								#ThrowStatement
 	| 'if' '(' expression ')' statement ('else' statement)?	#IfStatement
-	| 'for' '(' (variableDeclaration|letDeclaration)? ';' expression? ';' expression? ')' statement #ForStatement
-	| 'foreach' '(' (variableDeclaration|letDeclaration) 'in' expression ')' statement #ForeachStatement
+	| 'for' '(' (variableDeclaration|letDeclaration)? ';' expression? ';' expression? ')' statement		#ForStatement
+	| 'foreach' '(' (variableDeclaration|letDeclaration) 'in' expression ')' statement					#ForeachStatement
 	| 'delete' expression ';'								#DeleteStatement
 	;
 
@@ -241,29 +229,29 @@ letDeclaration
 	;
 
 expression
-	: expression '.' identifier
-	| expression '->' identifier
-	| expression '(' argumentList ')'
-	| expression '[' argumentList ']'
-	| expression '?'
-	| ('+'|'-'|'not'|'++'|'--'|'&'|'*') expression
-	| expression ('*'|'/') expression
-	| expression ('+'|'-') expression
-	| expression ('<' '<' | '>' '>') expression // TODO need to check no spaces between
-	| expression ('<'|'<='|'>'|'>=') expression
-	| expression ('=='|'<>') expression
-	| expression 'and' expression
-	| expression 'xor' expression
-	| expression 'or' expression
-	| expression '??' expression
-	| <assoc=right> expression '?' expression ':' expression
-	| <assoc=right> expression ('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') expression
-	| identifier
-	| 'new' typeName('.' identifier)? '(' argumentList ')'
-	| 'null'
-	| 'this'
-	| BooleanLiteral
-	| IntLiteral
-	| 'uninitialized'
-	| StringLiteral
+	: expression '.' identifier								#MemberExpression
+	| expression '->' identifier							#PointerMemberExpression
+	| expression '(' argumentList ')'						#CallExpression
+	| expression '[' argumentList ']'						#ArrayAccessExpression
+	| expression '?'										#NullCheckExpression
+	| op=('+'|'-'|'not'|'++'|'--'|'&'|'*') expression		#UnaryExpression
+	| expression op=('*'|'/') expression					#MultiplicativeExpression
+	| expression op=('+'|'-') expression					#AdditiveExpression
+	| expression (ops+='<' ops+='<' | ops+='>' ops+='>') expression #ShiftExpression
+	| expression op=('<'|'<='|'>'|'>=') expression			#ComparativeExpression
+	| expression op=('=='|'<>') expression					#EqualityExpression
+	| expression 'and' expression							#AndExpression
+	| expression 'xor' expression							#XorExpression
+	| expression 'or' expression							#OrExpression
+	| expression '??' expression							#CoalesceExpression
+	| <assoc=right> expression '?' expression ':' expression #IfExpression
+	| <assoc=right> expression op=('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') expression #AssignmentExpression
+	| identifier											#VariableExpression
+	| 'new' typeName('.' identifier)? '(' argumentList ')'	#NewExpression
+	| 'null'												#NullLiteralExpression
+	| 'this'												#ThisExpression
+	| BooleanLiteral										#BooleanLiteralExpression
+	| IntLiteral											#IntLiteralExpression
+	| 'uninitialized'										#UninitializedExpression
+	| StringLiteral											#StringLiteralExpression
 	;

@@ -64,6 +64,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{2A12091A-5CED-4393-A1FD-A0FF26899E5D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Compiler\Compiler.csproj">
       <Project>{5af89859-4261-48b7-b9e8-b9ff3def645f}</Project>
       <Name>Compiler</Name>

@@ -12,6 +12,7 @@ namespace Adamant.Compiler.Cmd
 		static void Main(string[] args)
 		{
 			var options = ParseOptions(args);
+			if(options == null) return;
 
 			var filename = args[0];
 			var stream = new AntlrFileStream(filename);
@@ -27,19 +28,29 @@ namespace Adamant.Compiler.Cmd
 			var parser = new AdamantParser(tokens);
 			parser.BuildParseTree = true;
 			var tree = parser.compilationUnit();
+			var syntaxCheck = new SyntaxCheckVisitor();
+			tree.Accept(syntaxCheck);
+			if(options.Action == CmdAction.PrintTree)
+				Console.WriteLine(tree.ToStringTree(parser));
 		}
 
 		private static CmdOptions ParseOptions(string[] args)
 		{
 			var options = new OptionSet();
 			var tokenize = options.AddSwitch("tokenize", "Rather than compiling, run the lexer and output the tokens");
-
+			var printTree = options.AddSwitch("tree", "Print the parse tree");
 			var files = options.Parse(args);
+
+			if(tokenize && printTree)
+			{
+				Console.WriteLine("Can't tokenize and print tree at same time");
+				return null;
+			}
 
 			return new CmdOptions()
 			{
 				File = files[0],
-				Action = tokenize ? CmdAction.Tokenize : CmdAction.Compile,
+				Action = tokenize ? CmdAction.Tokenize : (printTree ? CmdAction.PrintTree : CmdAction.Compile),
 			};
 		}
 
