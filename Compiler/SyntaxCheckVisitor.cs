@@ -31,7 +31,16 @@ namespace Adamant.Compiler
 		private static void ValidateModifiers(AdamantParser.ModifierContext[] modifiers, IList<IList<int?>> expected)
 		{
 			var adjustedModifiers = modifiers.ToList();
-			// TODO remove duplicates and report errors
+			// Remove duplicates
+			for(var i = 0; i < adjustedModifiers.Count; i++)
+				for(var j = adjustedModifiers.Count - 1; j > i; j--)
+					if(adjustedModifiers[i] == adjustedModifiers[j])
+					{
+						// TODO report duplicate modifier error
+						adjustedModifiers.RemoveAt(j);
+					}
+
+			// Verify modifiers
 			foreach(var expectedModifier in expected)
 			{
 				var modifier = modifiers[0];
