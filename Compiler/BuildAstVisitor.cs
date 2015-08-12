@@ -1,413 +1,430 @@
 ﻿using System;
+using System.Linq;
 using Adamant.Compiler.Antlr;
 using Adamant.Compiler.Ast;
+using Adamant.Compiler.Symbols;
 using Antlr4.Runtime.Tree;
 
 namespace Adamant.Compiler
 {
-	public class BuildAstVisitor : IAdamantParserVisitor<Node>
+	public class BuildAstVisitor : AdamantParserBaseVisitor<Node>
 	{
-		public Node Visit(IParseTree tree)
+		private readonly ChildSymbolTable symbolTable;
+		private readonly QualifiedName currentNamespace;
+
+		public BuildAstVisitor()
 		{
-			throw new NotImplementedException();
+			currentNamespace = QualifiedName.None;
 		}
 
-		public Node VisitChildren(IRuleNode node)
+		public BuildAstVisitor(ChildSymbolTable symbolTable, QualifiedName currentNamespace)
 		{
-			throw new NotImplementedException();
+			this.symbolTable = symbolTable;
+			this.currentNamespace = currentNamespace;
 		}
 
-		public Node VisitTerminal(ITerminalNode node)
+		public override Node Visit(IParseTree tree)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException("Generic visit methods should not be called.");
 		}
 
-		public Node VisitErrorNode(IErrorNode node)
+		public override Node VisitChildren(IRuleNode node)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException("Generic visit methods should not be called.");
 		}
 
-		public Node VisitCompilationUnit(AdamantParser.CompilationUnitContext context)
+		public override Node VisitTerminal(ITerminalNode node)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException("Generic visit methods should not be called.");
 		}
 
-		public Node VisitUsingStatement(AdamantParser.UsingStatementContext context)
+		public override Node VisitErrorNode(IErrorNode node)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException("Generic visit methods should not be called.");
+		}
+
+		public override Node VisitCompilationUnit(AdamantParser.CompilationUnitContext context)
+		{
+			var childSymbolTable = SymbolTable.NewRoot();
+			foreach(var @using in context.usingStatement())
+				childSymbolTable.Using(@using.namespaceName().GetText());
+
+			var visitor = new BuildAstVisitor(childSymbolTable, currentNamespace);
+			var declarations = context.namespaceMemberDeclaration().Select(d => (Declaration)d.Accept(visitor));
+			return new Assemblage(declarations);
 		}
 
-		public Node VisitIdentifier(AdamantParser.IdentifierContext context)
+		public override Node VisitIdentifier(AdamantParser.IdentifierContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitNamespaceName(AdamantParser.NamespaceNameContext context)
+		public override Node VisitNamespaceName(AdamantParser.NamespaceNameContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitNamespaceMemberDeclaration(AdamantParser.NamespaceMemberDeclarationContext context)
+		public override Node VisitNamespaceMemberDeclaration(AdamantParser.NamespaceMemberDeclarationContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitNamespaceDeclaration(AdamantParser.NamespaceDeclarationContext context)
+		public override Node VisitNamespaceDeclaration(AdamantParser.NamespaceDeclarationContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeDeclaration(AdamantParser.TypeDeclarationContext context)
+		public override Node VisitTypeDeclaration(AdamantParser.TypeDeclarationContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitGlobalDeclaration(AdamantParser.GlobalDeclarationContext context)
+		public override Node VisitGlobalDeclaration(AdamantParser.GlobalDeclarationContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitAttribute(AdamantParser.AttributeContext context)
+		public override Node VisitAttribute(AdamantParser.AttributeContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitModifier(AdamantParser.ModifierContext context)
+		public override Node VisitModifier(AdamantParser.ModifierContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeParameterList(AdamantParser.TypeParameterListContext context)
+		public override Node VisitTypeParameterList(AdamantParser.TypeParameterListContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeParameter(AdamantParser.TypeParameterContext context)
+		public override Node VisitTypeParameter(AdamantParser.TypeParameterContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeBase(AdamantParser.TypeBaseContext context)
+		public override Node VisitTypeBase(AdamantParser.TypeBaseContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeName(AdamantParser.TypeNameContext context)
+		public override Node VisitTypeName(AdamantParser.TypeNameContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeArguments(AdamantParser.TypeArgumentsContext context)
+		public override Node VisitTypeArguments(AdamantParser.TypeArgumentsContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitType(AdamantParser.TypeContext context)
+		public override Node VisitType(AdamantParser.TypeContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitFuncTypeParameterList(AdamantParser.FuncTypeParameterListContext context)
+		public override Node VisitFuncTypeParameterList(AdamantParser.FuncTypeParameterListContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitFuncTypeParameter(AdamantParser.FuncTypeParameterContext context)
+		public override Node VisitFuncTypeParameter(AdamantParser.FuncTypeParameterContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitConstExpression(AdamantParser.ConstExpressionContext context)
+		public override Node VisitConstExpression(AdamantParser.ConstExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeParameterConstraintClause(AdamantParser.TypeParameterConstraintClauseContext context)
+		public override Node VisitTypeParameterConstraintClause(AdamantParser.TypeParameterConstraintClauseContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitConstructorConstraint(AdamantParser.ConstructorConstraintContext context)
+		public override Node VisitConstructorConstraint(AdamantParser.ConstructorConstraintContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeConstraint(AdamantParser.TypeConstraintContext context)
+		public override Node VisitTypeConstraint(AdamantParser.TypeConstraintContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeListParameterConstraint(AdamantParser.TypeListParameterConstraintContext context)
+		public override Node VisitTypeListParameterConstraint(AdamantParser.TypeListParameterConstraintContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitTypeMember(AdamantParser.TypeMemberContext context)
+		public override Node VisitTypeMember(AdamantParser.TypeMemberContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitParameterList(AdamantParser.ParameterListContext context)
+		public override Node VisitParameterList(AdamantParser.ParameterListContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitParameter(AdamantParser.ParameterContext context)
+		public override Node VisitParameter(AdamantParser.ParameterContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitParameterModifier(AdamantParser.ParameterModifierContext context)
+		public override Node VisitParameterModifier(AdamantParser.ParameterModifierContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitConstructor(AdamantParser.ConstructorContext context)
+		public override Node VisitConstructor(AdamantParser.ConstructorContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitConstructorInitializer(AdamantParser.ConstructorInitializerContext context)
+		public override Node VisitConstructorInitializer(AdamantParser.ConstructorInitializerContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitArgumentList(AdamantParser.ArgumentListContext context)
+		public override Node VisitArgumentList(AdamantParser.ArgumentListContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitDestructor(AdamantParser.DestructorContext context)
+		public override Node VisitDestructor(AdamantParser.DestructorContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitMethod(AdamantParser.MethodContext context)
+		public override Node VisitMethod(AdamantParser.MethodContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitOperatorOverload(AdamantParser.OperatorOverloadContext context)
+		public override Node VisitOperatorOverload(AdamantParser.OperatorOverloadContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitConversionMethod(AdamantParser.ConversionMethodContext context)
+		public override Node VisitConversionMethod(AdamantParser.ConversionMethodContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitProperty(AdamantParser.PropertyContext context)
+		public override Node VisitProperty(AdamantParser.PropertyContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitMethodBody(AdamantParser.MethodBodyContext context)
+		public override Node VisitMethodBody(AdamantParser.MethodBodyContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitOverloadableOperator(AdamantParser.OverloadableOperatorContext context)
+		public override Node VisitOverloadableOperator(AdamantParser.OverloadableOperatorContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitField(AdamantParser.FieldContext context)
+		public override Node VisitField(AdamantParser.FieldContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitVariableDeclarationStatement(AdamantParser.VariableDeclarationStatementContext context)
+		public override Node VisitVariableDeclarationStatement(AdamantParser.VariableDeclarationStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitLetDeclarationStatement(AdamantParser.LetDeclarationStatementContext context)
+		public override Node VisitLetDeclarationStatement(AdamantParser.LetDeclarationStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitUnsafeBlockStatement(AdamantParser.UnsafeBlockStatementContext context)
+		public override Node VisitUnsafeBlockStatement(AdamantParser.UnsafeBlockStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitBlock(AdamantParser.BlockContext context)
+		public override Node VisitBlock(AdamantParser.BlockContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitEmptyStatement(AdamantParser.EmptyStatementContext context)
+		public override Node VisitEmptyStatement(AdamantParser.EmptyStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitExpressionStatement(AdamantParser.ExpressionStatementContext context)
+		public override Node VisitExpressionStatement(AdamantParser.ExpressionStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitReturnStatement(AdamantParser.ReturnStatementContext context)
+		public override Node VisitReturnStatement(AdamantParser.ReturnStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitThrowStatement(AdamantParser.ThrowStatementContext context)
+		public override Node VisitThrowStatement(AdamantParser.ThrowStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitIfStatement(AdamantParser.IfStatementContext context)
+		public override Node VisitIfStatement(AdamantParser.IfStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitForStatement(AdamantParser.ForStatementContext context)
+		public override Node VisitForStatement(AdamantParser.ForStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitForeachStatement(AdamantParser.ForeachStatementContext context)
+		public override Node VisitForeachStatement(AdamantParser.ForeachStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitDeleteStatement(AdamantParser.DeleteStatementContext context)
+		public override Node VisitDeleteStatement(AdamantParser.DeleteStatementContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitVariableDeclaration(AdamantParser.VariableDeclarationContext context)
+		public override Node VisitVariableDeclaration(AdamantParser.VariableDeclarationContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitLetDeclaration(AdamantParser.LetDeclarationContext context)
+		public override Node VisitLetDeclaration(AdamantParser.LetDeclarationContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitNullCheckExpression(AdamantParser.NullCheckExpressionContext context)
+		public override Node VisitNullCheckExpression(AdamantParser.NullCheckExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitStringLiteralExpression(AdamantParser.StringLiteralExpressionContext context)
+		public override Node VisitStringLiteralExpression(AdamantParser.StringLiteralExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitXorExpression(AdamantParser.XorExpressionContext context)
+		public override Node VisitXorExpression(AdamantParser.XorExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitUnaryExpression(AdamantParser.UnaryExpressionContext context)
+		public override Node VisitUnaryExpression(AdamantParser.UnaryExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitOrExpression(AdamantParser.OrExpressionContext context)
+		public override Node VisitOrExpression(AdamantParser.OrExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitIntLiteralExpression(AdamantParser.IntLiteralExpressionContext context)
+		public override Node VisitIntLiteralExpression(AdamantParser.IntLiteralExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitThisExpression(AdamantParser.ThisExpressionContext context)
+		public override Node VisitThisExpression(AdamantParser.ThisExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitAndExpression(AdamantParser.AndExpressionContext context)
+		public override Node VisitAndExpression(AdamantParser.AndExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitAssignmentExpression(AdamantParser.AssignmentExpressionContext context)
+		public override Node VisitAssignmentExpression(AdamantParser.AssignmentExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitBooleanLiteralExpression(AdamantParser.BooleanLiteralExpressionContext context)
+		public override Node VisitBooleanLiteralExpression(AdamantParser.BooleanLiteralExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitEqualityExpression(AdamantParser.EqualityExpressionContext context)
+		public override Node VisitEqualityExpression(AdamantParser.EqualityExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitMultiplicativeExpression(AdamantParser.MultiplicativeExpressionContext context)
+		public override Node VisitMultiplicativeExpression(AdamantParser.MultiplicativeExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitCallExpression(AdamantParser.CallExpressionContext context)
+		public override Node VisitCallExpression(AdamantParser.CallExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitNullLiteralExpression(AdamantParser.NullLiteralExpressionContext context)
+		public override Node VisitNullLiteralExpression(AdamantParser.NullLiteralExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitAdditiveExpression(AdamantParser.AdditiveExpressionContext context)
+		public override Node VisitAdditiveExpression(AdamantParser.AdditiveExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitIfExpression(AdamantParser.IfExpressionContext context)
+		public override Node VisitIfExpression(AdamantParser.IfExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitPointerMemberExpression(AdamantParser.PointerMemberExpressionContext context)
+		public override Node VisitPointerMemberExpression(AdamantParser.PointerMemberExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitNewExpression(AdamantParser.NewExpressionContext context)
+		public override Node VisitNewExpression(AdamantParser.NewExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitUninitializedExpression(AdamantParser.UninitializedExpressionContext context)
+		public override Node VisitUninitializedExpression(AdamantParser.UninitializedExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitVariableExpression(AdamantParser.VariableExpressionContext context)
+		public override Node VisitVariableExpression(AdamantParser.VariableExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitShiftExpression(AdamantParser.ShiftExpressionContext context)
+		public override Node VisitShiftExpression(AdamantParser.ShiftExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitMemberExpression(AdamantParser.MemberExpressionContext context)
+		public override Node VisitMemberExpression(AdamantParser.MemberExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitComparativeExpression(AdamantParser.ComparativeExpressionContext context)
+		public override Node VisitComparativeExpression(AdamantParser.ComparativeExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitCoalesceExpression(AdamantParser.CoalesceExpressionContext context)
+		public override Node VisitCoalesceExpression(AdamantParser.CoalesceExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Node VisitArrayAccessExpression(AdamantParser.ArrayAccessExpressionContext context)
+		public override Node VisitArrayAccessExpression(AdamantParser.ArrayAccessExpressionContext context)
 		{
 			throw new NotImplementedException();
 		}

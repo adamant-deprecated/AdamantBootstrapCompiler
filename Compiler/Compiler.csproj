@@ -81,17 +81,22 @@
       <DependentUpon>PreprocessorLineParser.g4</DependentUpon>
     </Compile>
     <Compile Include="Ast\AccessModifier.cs" />
+    <Compile Include="Ast\Assemblage.cs" />
     <Compile Include="Ast\ClassDeclaration.cs" />
     <Compile Include="Ast\Declaration.cs" />
     <Compile Include="Ast\FunctionDeclaration.cs" />
     <Compile Include="Ast\GlobalDeclaration.cs" />
     <Compile Include="Ast\Node.cs" />
+    <Compile Include="Ast\QualifiedName.cs" />
     <Compile Include="Ast\Statement.cs" />
     <Compile Include="BuildAstVisitor.cs" />
     <Compile Include="Preprocessor\Conditional.cs" />
     <Compile Include="Preprocessor\PreprocessorState.cs" />
     <Compile Include="Preprocessor\PreprocessorVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Symbols\ChildSymbolTable.cs" />
+    <Compile Include="Symbols\NullSymbolTable.cs" />
+    <Compile Include="Symbols\SymbolTable.cs" />
     <Compile Include="SyntaxCheckVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
