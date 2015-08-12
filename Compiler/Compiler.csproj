@@ -80,6 +80,14 @@
     <Compile Include="Antlr\PreprocessorLineParserVisitor.cs">
       <DependentUpon>PreprocessorLineParser.g4</DependentUpon>
     </Compile>
+    <Compile Include="Ast\AccessModifier.cs" />
+    <Compile Include="Ast\ClassDeclaration.cs" />
+    <Compile Include="Ast\Declaration.cs" />
+    <Compile Include="Ast\FunctionDeclaration.cs" />
+    <Compile Include="Ast\GlobalDeclaration.cs" />
+    <Compile Include="Ast\Node.cs" />
+    <Compile Include="Ast\Statement.cs" />
+    <Compile Include="BuildAstVisitor.cs" />
     <Compile Include="Preprocessor\Conditional.cs" />
     <Compile Include="Preprocessor\PreprocessorState.cs" />
     <Compile Include="Preprocessor\PreprocessorVisitor.cs" />
@@ -112,6 +120,7 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)Antlr

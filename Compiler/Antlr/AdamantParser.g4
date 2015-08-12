@@ -201,7 +201,7 @@ overloadableOperator
 	;
 
 field
-	: attribute* modifier* identifier (':' type)? ('=' expression)? ';'
+	: attribute* modifier* 'var' identifier (':' type)? ('=' expression)? ';'
 	| attribute* modifier* 'let' identifier (':' type)? '=' expression ';'
 	;
 
