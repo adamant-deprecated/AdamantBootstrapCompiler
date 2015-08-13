@@ -50,7 +50,7 @@ namespace Adamant.Compiler
 				childSymbolTable.Using(@using.namespaceName().GetText());
 
 			var visitor = new BuildAstVisitor(childSymbolTable, currentNamespace);
-			var declarations = context.namespaceMemberDeclaration().Select(d => (Declaration)d.Accept(visitor));
+			var declarations = context.declaration().Select(d => (Declaration)d.Accept(visitor));
 			return new Assemblage(declarations);
 		}
 
@@ -64,17 +64,7 @@ namespace Adamant.Compiler
 			throw new NotImplementedException();
 		}
 
-		public override Node VisitNamespaceMemberDeclaration(AdamantParser.NamespaceMemberDeclarationContext context)
-		{
-			throw new NotImplementedException();
-		}
-
 		public override Node VisitNamespaceDeclaration(AdamantParser.NamespaceDeclarationContext context)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override Node VisitTypeDeclaration(AdamantParser.TypeDeclarationContext context)
 		{
 			throw new NotImplementedException();
 		}

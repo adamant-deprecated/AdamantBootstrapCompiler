@@ -70,42 +70,38 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitNamespaceName([NotNull] AdamantParser.NamespaceNameContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.namespaceMemberDeclaration"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterNamespaceMemberDeclaration([NotNull] AdamantParser.NamespaceMemberDeclarationContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.namespaceMemberDeclaration"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitNamespaceMemberDeclaration([NotNull] AdamantParser.NamespaceMemberDeclarationContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.namespaceDeclaration"/>.
+	/// Enter a parse tree produced by the <c>NamespaceDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void EnterNamespaceDeclaration([NotNull] AdamantParser.NamespaceDeclarationContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.namespaceDeclaration"/>.
+	/// Exit a parse tree produced by the <c>NamespaceDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitNamespaceDeclaration([NotNull] AdamantParser.NamespaceDeclarationContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.typeDeclaration"/>.
+	/// Enter a parse tree produced by the <c>ClassDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterTypeDeclaration([NotNull] AdamantParser.TypeDeclarationContext context);
+	void EnterClassDeclaration([NotNull] AdamantParser.ClassDeclarationContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.typeDeclaration"/>.
+	/// Exit a parse tree produced by the <c>ClassDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitTypeDeclaration([NotNull] AdamantParser.TypeDeclarationContext context);
+	void ExitClassDeclaration([NotNull] AdamantParser.ClassDeclarationContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.globalDeclaration"/>.
+	/// Enter a parse tree produced by the <c>GlobalDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void EnterGlobalDeclaration([NotNull] AdamantParser.GlobalDeclarationContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.globalDeclaration"/>.
+	/// Exit a parse tree produced by the <c>GlobalDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitGlobalDeclaration([NotNull] AdamantParser.GlobalDeclarationContext context);

@@ -9,7 +9,7 @@ options
 compilationUnit
 	: usingStatement*
 	  // globalAttribute*
-	  namespaceMemberDeclaration*
+	  declaration*
 	  EOF
 	;
 
@@ -27,23 +27,10 @@ namespaceName
 	: identifier ('.' identifier)*
 	;
 
-namespaceMemberDeclaration
-	: namespaceDeclaration
-	| typeDeclaration
-	| globalDeclaration
-	;
-
-namespaceDeclaration
-	: 'namespace' namespaceName '{' usingStatement* namespaceMemberDeclaration* '}'
-	;
-
-typeDeclaration
-	: attribute* modifier* 'class' identifier typeParameterList? typeBase? typeParameterConstraintClause* '{' typeMember* '}'
-	;
-
-globalDeclaration
-	: attribute* modifier* 'var' identifier (':' type)? ('=' expression)? ';'
-	| attribute* modifier* 'let' identifier (':' type)? '=' expression ';'
+declaration
+	: 'namespace' namespaceName '{' usingStatement* declaration* '}'  #NamespaceDeclaration
+	| attribute* modifier* 'class' identifier typeParameterList? typeBase? typeParameterConstraintClause* '{' typeMember* '}' #ClassDeclaration
+	| attribute* modifier* kind=('var'|'let') identifier (':' type)? ('=' expression)? ';' #GlobalDeclaration
 	;
 
 attribute

@@ -55,25 +55,22 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitNamespaceName([NotNull] AdamantParser.NamespaceNameContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AdamantParser.namespaceMemberDeclaration"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNamespaceMemberDeclaration([NotNull] AdamantParser.NamespaceMemberDeclarationContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="AdamantParser.namespaceDeclaration"/>.
+	/// Visit a parse tree produced by the <c>NamespaceDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitNamespaceDeclaration([NotNull] AdamantParser.NamespaceDeclarationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AdamantParser.typeDeclaration"/>.
+	/// Visit a parse tree produced by the <c>ClassDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeDeclaration([NotNull] AdamantParser.TypeDeclarationContext context);
+	Result VisitClassDeclaration([NotNull] AdamantParser.ClassDeclarationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AdamantParser.globalDeclaration"/>.
+	/// Visit a parse tree produced by the <c>GlobalDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>

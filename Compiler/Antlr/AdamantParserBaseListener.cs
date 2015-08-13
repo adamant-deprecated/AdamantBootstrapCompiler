@@ -82,49 +82,37 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitNamespaceName([NotNull] AdamantParser.NamespaceNameContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.namespaceMemberDeclaration"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNamespaceMemberDeclaration([NotNull] AdamantParser.NamespaceMemberDeclarationContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.namespaceMemberDeclaration"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNamespaceMemberDeclaration([NotNull] AdamantParser.NamespaceMemberDeclarationContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.namespaceDeclaration"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.NamespaceDeclaration"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void EnterNamespaceDeclaration([NotNull] AdamantParser.NamespaceDeclarationContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.namespaceDeclaration"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.NamespaceDeclaration"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitNamespaceDeclaration([NotNull] AdamantParser.NamespaceDeclarationContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.typeDeclaration"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.ClassDeclaration"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTypeDeclaration([NotNull] AdamantParser.TypeDeclarationContext context) { }
+	public virtual void EnterClassDeclaration([NotNull] AdamantParser.ClassDeclarationContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.typeDeclaration"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.ClassDeclaration"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTypeDeclaration([NotNull] AdamantParser.TypeDeclarationContext context) { }
+	public virtual void ExitClassDeclaration([NotNull] AdamantParser.ClassDeclarationContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.globalDeclaration"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.GlobalDeclaration"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void EnterGlobalDeclaration([NotNull] AdamantParser.GlobalDeclarationContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.globalDeclaration"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.GlobalDeclaration"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
