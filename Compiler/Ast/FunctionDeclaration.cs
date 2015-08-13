@@ -2,8 +2,8 @@
 {
 	public class FunctionDeclaration : Declaration
 	{
-		public FunctionDeclaration(string name, AccessModifier access) 
-			: base(name, access)
+		public FunctionDeclaration(AccessModifier access, QualifiedName name)
+			: base(access, name)
 		{
 		}
 	}

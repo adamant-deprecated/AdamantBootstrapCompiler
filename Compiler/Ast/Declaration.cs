@@ -2,13 +2,13 @@
 {
 	public abstract class Declaration : Node
 	{
-		protected Declaration(string name, AccessModifier access)
+		protected Declaration(AccessModifier access, QualifiedName name)
 		{
 			Name = name;
 			Access = access;
 		}
 
-		public string Name { get; private set; }
+		public QualifiedName Name { get; private set; }
 		public AccessModifier Access { get; private set; }
 	}
 }

@@ -146,16 +146,6 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitTypeParameter([NotNull] AdamantParser.TypeParameterContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.typeBase"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterTypeBase([NotNull] AdamantParser.TypeBaseContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.typeBase"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitTypeBase([NotNull] AdamantParser.TypeBaseContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.typeName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -262,15 +252,15 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitTypeListParameterConstraint([NotNull] AdamantParser.TypeListParameterConstraintContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.typeMember"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.member"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterTypeMember([NotNull] AdamantParser.TypeMemberContext context);
+	void EnterMember([NotNull] AdamantParser.MemberContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.typeMember"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.member"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitTypeMember([NotNull] AdamantParser.TypeMemberContext context);
+	void ExitMember([NotNull] AdamantParser.MemberContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.parameterList"/>.
 	/// </summary>

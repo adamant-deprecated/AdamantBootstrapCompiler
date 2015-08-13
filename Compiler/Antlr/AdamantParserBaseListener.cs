@@ -166,18 +166,6 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitTypeParameter([NotNull] AdamantParser.TypeParameterContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.typeBase"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTypeBase([NotNull] AdamantParser.TypeBaseContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.typeBase"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTypeBase([NotNull] AdamantParser.TypeBaseContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.typeName"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -298,17 +286,17 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitTypeListParameterConstraint([NotNull] AdamantParser.TypeListParameterConstraintContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.typeMember"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.member"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTypeMember([NotNull] AdamantParser.TypeMemberContext context) { }
+	public virtual void EnterMember([NotNull] AdamantParser.MemberContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.typeMember"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.member"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTypeMember([NotNull] AdamantParser.TypeMemberContext context) { }
+	public virtual void ExitMember([NotNull] AdamantParser.MemberContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.parameterList"/>.
 	/// <para>The default implementation does nothing.</para>

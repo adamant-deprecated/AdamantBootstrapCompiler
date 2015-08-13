@@ -1,24 +1,43 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics.Contracts;
 
 namespace Adamant.Compiler.Ast
 {
-	public class QualifiedName
+	public struct QualifiedName
 	{
 		public static QualifiedName None = new QualifiedName();
 
-		private readonly string[] names;
+		private readonly string value;
 
-		private QualifiedName()
+		public QualifiedName(string name)
 		{
-			names = new string[0];
+			value = string.IsNullOrEmpty(name) ? null : Clean(name);
 		}
 
-		public QualifiedName(IEnumerable<string> names)
+		[Pure]
+		public QualifiedName Append(string name)
 		{
-			this.names = names.ToArray();
+			return value == null ? new QualifiedName(name) : new QualifiedName(value + "." + name);
 		}
 
-		public IEnumerable<string> Names => names;
+		private static string Clean(string name)
+		{
+			return name.Replace("@", "");
+		}
+
+		public override int GetHashCode()
+		{
+			return value.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			var other = obj as QualifiedName?;
+			return other != null && Equals(value, other.Value.value);
+		}
+
+		public override string ToString()
+		{
+			return value;
+		}
 	}
 }

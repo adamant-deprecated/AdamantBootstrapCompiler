@@ -29,8 +29,11 @@ namespaceName
 
 declaration
 	: 'namespace' namespaceName '{' usingStatement* declaration* '}'  #NamespaceDeclaration
-	| attribute* modifier* 'class' identifier typeParameterList? typeBase? typeParameterConstraintClause* '{' typeMember* '}' #ClassDeclaration
-	| attribute* modifier* kind=('var'|'let') identifier (':' type)? ('=' expression)? ';' #GlobalDeclaration
+	| attribute* modifier* 'class' name=identifier typeParameterList?
+		(':' baseType=typeName? (':' interfaces+=typeName (',' interfaces+=typeName)*)?)?
+		typeParameterConstraintClause*
+		'{' member* '}' #ClassDeclaration
+	| attribute* modifier* kind=('var'|'let') name=identifier (':' type)? ('=' expression)? ';' #GlobalDeclaration
 	;
 
 attribute
@@ -60,10 +63,6 @@ typeParameterList
 
 typeParameter
 	: identifier '...'? (':' typeName)?
-	;
-
-typeBase
-	: ':' baseType=typeName? (':' interfaces+=typeName (',' interfaces+=typeName)*)?
 	;
 
 typeName
@@ -110,7 +109,7 @@ typeParameterConstraint
 	| typeParameter			#TypeListParameterConstraint // will only be hit for type lists (i.e. "foo...")
 	;
 
-typeMember
+member
 	: constructor
 	| destructor
 	| conversionMethod
@@ -188,8 +187,7 @@ overloadableOperator
 	;
 
 field
-	: attribute* modifier* 'var' identifier (':' type)? ('=' expression)? ';'
-	| attribute* modifier* 'let' identifier (':' type)? '=' expression ';'
+	: attribute* modifier* kind=('var'|'let') identifier (':' type)? ('=' expression)? ';'
 	;
 
 statement

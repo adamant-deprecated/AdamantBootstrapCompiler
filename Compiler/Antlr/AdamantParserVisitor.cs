@@ -100,12 +100,6 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeParameter([NotNull] AdamantParser.TypeParameterContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AdamantParser.typeBase"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitTypeBase([NotNull] AdamantParser.TypeBaseContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="AdamantParser.typeName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -169,11 +163,11 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeListParameterConstraint([NotNull] AdamantParser.TypeListParameterConstraintContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AdamantParser.typeMember"/>.
+	/// Visit a parse tree produced by <see cref="AdamantParser.member"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeMember([NotNull] AdamantParser.TypeMemberContext context);
+	Result VisitMember([NotNull] AdamantParser.MemberContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AdamantParser.parameterList"/>.
 	/// </summary>

@@ -2,8 +2,8 @@
 {
 	public class GlobalDeclaration : Declaration
 	{
-		public GlobalDeclaration(string name, AccessModifier access)
-			: base(name, access)
+		public GlobalDeclaration(AccessModifier access, QualifiedName name)
+			: base(access, name)
 		{
 		}
 	}
