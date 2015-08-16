@@ -44,7 +44,6 @@ namespace Adamant.Compiler
 			throw new NotSupportedException("Generic visit methods should not be called.");
 		}
 
-
 		public override Node VisitCompilationUnit(AdamantParser.CompilationUnitContext context)
 		{
 			var newContext = new UsingContext(usingContext, GetNamespaces(context.usingStatement()));
@@ -62,19 +61,6 @@ namespace Adamant.Compiler
 			return new Assemblage(declarations);
 		}
 
-		private static IEnumerable<QualifiedName> GetNamespaces(AdamantParser.UsingStatementContext[] contexts)
-		{
-			return contexts.Select(s => new QualifiedName(s.namespaceName().GetText()));
-		}
-
-		public override Node VisitGlobalDeclaration(AdamantParser.GlobalDeclarationContext context)
-		{
-			var accessModifier = GetAccessModifier(context.modifier());
-			var name = context.name.GetText();
-			var fullName = currentNamespace.Append(name);
-			return new GlobalDeclaration(accessModifier, fullName);
-		}
-
 		public override Node VisitClassDeclaration(AdamantParser.ClassDeclarationContext context)
 		{
 			// TODO Attributes
@@ -87,6 +73,19 @@ namespace Adamant.Compiler
 			var name = context.name.GetText();
 			var fullName = currentNamespace.Append(name);
 			return new ClassDeclaration(accessModifier, isPartial, safety, isSealed, isAbstract, fullName);
+		}
+
+		public override Node VisitGlobalDeclaration(AdamantParser.GlobalDeclarationContext context)
+		{
+			var accessModifier = GetAccessModifier(context.modifier());
+			var name = context.name.GetText();
+			var fullName = currentNamespace.Append(name);
+			return new GlobalDeclaration(accessModifier, fullName);
+		}
+
+		private static IEnumerable<QualifiedName> GetNamespaces(AdamantParser.UsingStatementContext[] contexts)
+		{
+			return contexts.Select(s => new QualifiedName(s.namespaceName().GetText()));
 		}
 
 		private static bool Has(AdamantParser.ModifierContext[] modifiers, int desiredModifier)
