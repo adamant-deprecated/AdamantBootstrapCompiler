@@ -115,6 +115,7 @@ Unsafe : 'unsafe';
 // Ownership
 Own : 'own';
 Mutable : 'mut';
+Immutable : 'immut';
 
 //*************
 // Literals

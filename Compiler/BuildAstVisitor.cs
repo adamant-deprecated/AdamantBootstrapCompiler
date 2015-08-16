@@ -6,6 +6,8 @@ using Adamant.Compiler.Ast;
 using Adamant.Compiler.Ast.Declarations;
 using Adamant.Compiler.Ast.Expressions;
 using Adamant.Compiler.Ast.Members;
+using Adamant.Compiler.Ast.Statements;
+using Adamant.Compiler.Ast.Types;
 using Antlr4.Runtime.Tree;
 
 namespace Adamant.Compiler
@@ -92,18 +94,82 @@ namespace Adamant.Compiler
 			return new GlobalDeclaration(accessModifier, fullName, initExpression);
 		}
 
+		public override Node VisitParameter(AdamantParser.ParameterContext context)
+		{
+			//TODO implement
+			return new Parameter();
+		}
+
+		#endregion
+
+		#region Types
+		public override Node VisitMutableType(AdamantParser.MutableTypeContext context)
+		{
+			var isReference = context.@ref != null;
+			var type = (PlainType)context.plainType().Accept(this);
+			return new OwnershipType(isReference, Ownership.MutableBorrow, type);
+		}
+
+		public override Node VisitOwnedType(AdamantParser.OwnedTypeContext context)
+		{
+			var isReference = context.@ref != null;
+			var type = (PlainType)context.plainType().Accept(this);
+			return new OwnershipType(isReference, Ownership.Owned, type);
+		}
+
+		public override Node VisitImmutableType(AdamantParser.ImmutableTypeContext context)
+		{
+			var isReference = context.@ref != null;
+			var type = (PlainType)context.plainType().Accept(this);
+			return new OwnershipType(isReference, Ownership.ImmutableBorrow, type);
+		}
+
+		public override Node VisitImplicitType(AdamantParser.ImplicitTypeContext context)
+		{
+			var isReference = context.@ref != null;
+			var type = (PlainType)context.plainType().Accept(this);
+			return new OwnershipType(isReference, Ownership.Implicit, type);
+		}
+
+		public override Node VisitNamedType(AdamantParser.NamedTypeContext context)
+		{
+			return context.typeName().Accept(this);
+		}
+
+		public override Node VisitTypeName(AdamantParser.TypeNameContext context)
+		{
+			var outerType = (TypeName)context.outerType?.Accept(this);
+			var name = new Name(context.identifier().GetText());
+			return new TypeName(outerType, name);
+		}
 		#endregion
 
 		#region Members
+		public override Node VisitConstructor(AdamantParser.ConstructorContext context)
+		{
+			var accessModifier = GetAccessModifier(context.modifier());
+			var name = new Name(context.identifier()?.GetText());
+			var parameters = context.parameterList()._parameters.Select(p => (Parameter)p.Accept(this));
+			var body = context.methodBody().statement().Select(s => (Statement)s.Accept(this));
+			return new Constructor(accessModifier, name, parameters, body);
+		}
+
 		public override Node VisitField(AdamantParser.FieldContext context)
 		{
 			var accessModifier = GetAccessModifier(context.modifier());
-			var isLet = context.kind.Type == AdamantLexer.Let;
-			var isMutable = !isLet || context.mutable != null;
+			var isMutableReference = context.kind.Type == AdamantLexer.Var;
 			var name = new Name(context.identifier().GetText());
-			var type = context.type()?.Accept(this);
+			var type = (OwnershipType)context.ownershipType()?.Accept(this);
 			var initExpression = (Expression)context.expression()?.Accept(this);
-			return new Field(accessModifier, !isLet, isMutable, name, initExpression);
+			return new Field(accessModifier, isMutableReference, name, type, initExpression);
+		}
+		#endregion
+
+		#region Statements
+		public override Node VisitExpressionStatement(AdamantParser.ExpressionStatementContext context)
+		{
+			//TODO implement
+			return new ExpressionStatement();
 		}
 		#endregion
 
@@ -111,17 +177,16 @@ namespace Adamant.Compiler
 		public override Node VisitNewObjectExpression(AdamantParser.NewObjectExpressionContext context)
 		{
 			var baseTypes = context.baseTypes();
-			var baseClass = baseTypes?.baseType;
-			var interfaces = baseTypes?._interfaces;
+			var baseClass = (TypeNode)baseTypes?.baseType?.Accept(this);
+			var interfaces = baseTypes?._interfaces.Select(i => (TypeNode)i.Accept(this)).ToList() ?? new List<TypeNode>();
 			var members = context.member().Select(m => (Member)m.Accept(this));
-			return new NewObjectExpression(members);
+			return new NewObjectExpression(baseClass, interfaces, members);
 		}
 
 		public override Node VisitIntLiteralExpression(AdamantParser.IntLiteralExpressionContext context)
 		{
 			return new LiteralExpression();
 		}
-
 		#endregion
 
 		private static IEnumerable<QualifiedName> GetNamespaces(AdamantParser.UsingStatementContext[] contexts)

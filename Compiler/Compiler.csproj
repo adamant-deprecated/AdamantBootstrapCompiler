@@ -84,6 +84,8 @@
     <Compile Include="Ast\Assemblage.cs" />
     <Compile Include="Ast\Declarations\ClassDeclaration.cs" />
     <Compile Include="Ast\Declaration.cs" />
+    <Compile Include="Ast\Members\MethodLike.cs" />
+    <Compile Include="Ast\Declarations\Parameter.cs" />
     <Compile Include="Ast\Expression.cs" />
     <Compile Include="Ast\Declarations\FunctionDeclaration.cs" />
     <Compile Include="Ast\Declarations\GlobalDeclaration.cs" />
@@ -91,12 +93,19 @@
     <Compile Include="Ast\Expressions\NewObjectExpression.cs" />
     <Compile Include="Ast\IDeclarationContainer.cs" />
     <Compile Include="Ast\Member.cs" />
+    <Compile Include="Ast\Members\Constructor.cs" />
     <Compile Include="Ast\Members\Field.cs" />
     <Compile Include="Ast\Name.cs" />
     <Compile Include="Ast\Node.cs" />
     <Compile Include="Ast\QualifiedName.cs" />
     <Compile Include="Ast\Safety.cs" />
     <Compile Include="Ast\Statement.cs" />
+    <Compile Include="Ast\Statements\ExpressionStatement.cs" />
+    <Compile Include="Ast\Type.cs" />
+    <Compile Include="Ast\Types\Ownership.cs" />
+    <Compile Include="Ast\Types\OwnershipType.cs" />
+    <Compile Include="Ast\Types\PlainType.cs" />
+    <Compile Include="Ast\Types\TypeName.cs" />
     <Compile Include="Ast\UsingContext.cs" />
     <Compile Include="BuildAstVisitor.cs" />
     <Compile Include="Preprocessor\Conditional.cs" />
@@ -134,10 +143,7 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Ast\Statements\" />
-    <Folder Include="Ast\Types\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)Antlr

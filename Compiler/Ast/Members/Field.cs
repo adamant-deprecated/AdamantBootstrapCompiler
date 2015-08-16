@@ -1,19 +1,21 @@
-﻿namespace Adamant.Compiler.Ast.Members
+﻿using Adamant.Compiler.Ast.Types;
+
+namespace Adamant.Compiler.Ast.Members
 {
 	public class Field : Member
 	{
-		public Field(AccessModifier access, bool isMutableReference, bool isMutableValue, Name name, Expression initExpression)
+		public Field(AccessModifier access, bool isMutableReference, Name name, OwnershipType type, Expression initExpression)
 			: base(access)
 		{
 			IsMutableReference = isMutableReference;
-			IsMutableValue = isMutableValue;
 			Name = name;
+			Type = type;
 			InitExpression = initExpression;
 		}
 
 		public bool IsMutableReference { get; }
-		public bool IsMutableValue { get; }
 		public Name Name { get; }
-		public Expression InitExpression { get; set; }
+		public OwnershipType Type { get; }
+		public Expression InitExpression { get; }
 	}
 }

@@ -32,7 +32,7 @@ declaration
 	| attribute* modifier* 'class' name=identifier typeParameterList? baseTypes?
 		typeParameterConstraintClause*
 		'{' member* '}' #ClassDeclaration
-	| attribute* modifier* kind=('var'|'let') name=identifier (':' type)? ('=' expression)? ';' #GlobalDeclaration
+	| attribute* modifier* kind=('var'|'let') name=identifier (':' ownershipType)? ('=' expression)? ';' #GlobalDeclaration
 	;
 
 attribute
@@ -68,21 +68,26 @@ typeParameter
 	;
 
 typeName
-	: identifier typeArguments? ('.' identifier typeArguments?)*
+	: outerType=typeName '.' identifier typeArguments?
+	| identifier typeArguments?
 	;
 
 typeArguments
-	: '<' type (',' type)* '>'
+	: '<' ownershipType (',' ownershipType)* '>'
 	;
 
-type
-	: typeName
-	| type '*'
-	| type '[' constExpression (',' constExpression)* ']'
-	| 'mut' type
-	| 'own' type
-	| 'ref' type
-	| funcTypeParameterList '=>' type
+ownershipType // these are types with ownership modifiers
+	: ref='ref'? 'mut' plainType	#MutableType
+	| ref='ref'? 'own' plainType	#OwnedType
+	| ref='ref'? 'immut' plainType	#ImmutableType
+	| ref='ref'? plainType			#ImplicitType
+	;
+
+plainType
+	: typeName													#NamedType
+	| plainType '*'												#PointerType
+	| plainType '[' constExpression (',' constExpression)* ']'	#ArrayType
+	| funcTypeParameterList '=>' ownershipType					#FunctionType
 	;
 
 funcTypeParameterList
@@ -91,7 +96,7 @@ funcTypeParameterList
 	;
 
 funcTypeParameter
-	: parameterModifier* type
+	: parameterModifier* ownershipType
 	;
 
 constExpression
@@ -112,29 +117,27 @@ typeParameterConstraint
 	;
 
 member
-	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody												#Constructor
-	| attribute* modifier* 'delete' parameterList methodBody																				#Destructor
-	| attribute* modifier* 'conversion' typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody					#ConversionMethod
-	| attribute* modifier* 'operator' overloadableOperator parameterList '=>' type methodBody												#OperatorOverloadMethod
-	| attribute* modifier* kind=('var'|'let') mutable='mut'? identifier (':' type)? ('=' expression)? ';'											#Field
-	| attribute* modifier* kind=('get'|'set') identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody	#Property
-	| attribute* modifier* identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody						#Method
+	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody													#Constructor
+	| attribute* modifier* 'delete' parameterList methodBody																					#Destructor
+	| attribute* modifier* 'conversion' typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody					#ConversionMethod
+	| attribute* modifier* 'operator' overloadableOperator parameterList '=>' ownershipType methodBody												#OperatorOverloadMethod
+	| attribute* modifier* kind=('var'|'let') identifier (':' ownershipType)? ('=' expression)? ';'													#Field
+	| attribute* modifier* kind=('get'|'set') identifier typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody	#Property
+	| attribute* modifier* identifier typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody						#Method
 	;
 
 parameterList
-	: '(' parameter (',' parameter)* ')'
+	: '(' parameters+=parameter (',' parameters+=parameter)* ')'
 	| '(' ')'
 	;
 
 parameter
-	: parameterModifier* identifier? ':' type
-	| parameterModifier* 'this'
+	: parameterModifier* identifier? ':' ownershipType
+	| parameterModifier* 'this' (':' 'mut')?
 	;
 
 parameterModifier
-	: 'mut'
-	| 'own'
-	| 'params'
+	: 'params'
 	;
 
 constructorInitializer
@@ -166,7 +169,6 @@ overloadableOperator
 
 statement
 	: variableDeclaration ';'								#VariableDeclarationStatement
-	| letDeclaration ';'	 								#LetDeclarationStatement
 	| 'unsafe' '{' statement* '}'							#UnsafeBlockStatement
 	| '{' statement* '}'									#Block
 	| ';'													#EmptyStatement
@@ -174,17 +176,13 @@ statement
 	| 'return' expression ';'								#ReturnStatement
 	| 'throw' expression ';'								#ThrowStatement
 	| 'if' '(' expression ')' statement ('else' statement)?	#IfStatement
-	| 'for' '(' (variableDeclaration|letDeclaration)? ';' expression? ';' expression? ')' statement		#ForStatement
-	| 'foreach' '(' (variableDeclaration|letDeclaration) 'in' expression ')' statement					#ForeachStatement
+	| 'for' '(' variableDeclaration? ';' expression? ';' expression? ')' statement		#ForStatement
+	| 'foreach' '(' variableDeclaration 'in' expression ')' statement					#ForeachStatement
 	| 'delete' expression ';'								#DeleteStatement
 	;
 
 variableDeclaration
-	: 'var' identifier (':' type)? ('=' expression)?
-	;
-
-letDeclaration
-	: 'let' identifier (':' type)? '=' expression
+	: kind=('var'|'let') identifier (':' ownershipType)? ('=' expression)?
 	;
 
 expression
