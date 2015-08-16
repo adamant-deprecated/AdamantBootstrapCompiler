@@ -82,11 +82,17 @@
     </Compile>
     <Compile Include="Ast\AccessModifier.cs" />
     <Compile Include="Ast\Assemblage.cs" />
-    <Compile Include="Ast\ClassDeclaration.cs" />
+    <Compile Include="Ast\Declarations\ClassDeclaration.cs" />
     <Compile Include="Ast\Declaration.cs" />
-    <Compile Include="Ast\FunctionDeclaration.cs" />
-    <Compile Include="Ast\GlobalDeclaration.cs" />
+    <Compile Include="Ast\Expression.cs" />
+    <Compile Include="Ast\Declarations\FunctionDeclaration.cs" />
+    <Compile Include="Ast\Declarations\GlobalDeclaration.cs" />
+    <Compile Include="Ast\Expressions\LiteralExpression.cs" />
+    <Compile Include="Ast\Expressions\NewObjectExpression.cs" />
     <Compile Include="Ast\IDeclarationContainer.cs" />
+    <Compile Include="Ast\Member.cs" />
+    <Compile Include="Ast\Members\Field.cs" />
+    <Compile Include="Ast\Name.cs" />
     <Compile Include="Ast\Node.cs" />
     <Compile Include="Ast\QualifiedName.cs" />
     <Compile Include="Ast\Safety.cs" />
@@ -128,7 +134,10 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Ast\Statements\" />
+    <Folder Include="Ast\Types\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)Antlr

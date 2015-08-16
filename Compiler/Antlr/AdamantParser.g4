@@ -56,7 +56,6 @@ modifier
 	| Symbol='explicit'
 	| Symbol='sealed'
 	| Symbol='override'
-	| Symbol='static'
 	| Symbol='const'
 	;
 
@@ -113,13 +112,13 @@ typeParameterConstraint
 	;
 
 member
-	: constructor
-	| destructor
-	| conversionMethod
-	| method
-	| operatorOverload
-	| field
-	| property
+	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody												#Constructor
+	| attribute* modifier* 'delete' parameterList methodBody																				#Destructor
+	| attribute* modifier* 'conversion' typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody					#ConversionMethod
+	| attribute* modifier* 'operator' overloadableOperator parameterList '=>' type methodBody												#OperatorOverloadMethod
+	| attribute* modifier* kind=('var'|'let') mutable='mut'? identifier (':' type)? ('=' expression)? ';'											#Field
+	| attribute* modifier* kind=('get'|'set') identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody	#Property
+	| attribute* modifier* identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody						#Method
 	;
 
 parameterList
@@ -138,10 +137,6 @@ parameterModifier
 	| 'params'
 	;
 
-constructor
-	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody
-	;
-
 constructorInitializer
 	: ':' 'base' '(' argumentList ')'
 	| ':' 'this' '(' argumentList ')'
@@ -150,26 +145,6 @@ constructorInitializer
 argumentList
 	:  expression (',' expression)*
 	|
-	;
-
-destructor
-	: attribute* modifier* 'delete' parameterList methodBody
-	;
-
-method
-	: attribute* modifier* identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
-	;
-
-operatorOverload
-	: attribute* modifier* 'operator' overloadableOperator parameterList '=>' type methodBody
-	;
-
-conversionMethod
-	: attribute* modifier* 'conversion' typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
-	;
-
-property
-	: attribute* modifier* ('get'|'set') identifier typeArguments? parameterList '=>' type typeParameterConstraintClause* methodBody
 	;
 
 methodBody
@@ -187,10 +162,6 @@ overloadableOperator
 	| '??'
 	| '.'
 	| '[' ']'
-	;
-
-field
-	: attribute* modifier* kind=('var'|'let') 'mut'? identifier (':' type)? ('=' expression)? ';'
 	;
 
 statement
@@ -236,7 +207,7 @@ expression
 	| <assoc=right> expression op=('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') expression #AssignmentExpression
 	| identifier											#VariableExpression
 	| 'new' typeName('.' identifier)? '(' argumentList ')'	#NewExpression
-	| 'new' baseTypes? '(' argumentList ')' '{' member* '}'	#NewAnonExpression
+	| 'new' baseTypes? '(' argumentList ')' '{' member* '}'	#NewObjectExpression
 	| 'null'												#NullLiteralExpression
 	| 'this'												#ThisExpression
 	| BooleanLiteral										#BooleanLiteralExpression

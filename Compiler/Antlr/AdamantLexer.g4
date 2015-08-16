@@ -74,7 +74,6 @@ Uninitialized : 'uninitialized';
 Where : 'where';
 Var : 'var';
 Let : 'let';
-Static : 'static';
 Get : 'get';
 Set : 'set';
 Do : 'do';

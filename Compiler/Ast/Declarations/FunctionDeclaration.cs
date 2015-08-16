@@ -1,4 +1,4 @@
-﻿namespace Adamant.Compiler.Ast
+﻿namespace Adamant.Compiler.Ast.Declarations
 {
 	public class FunctionDeclaration : Declaration
 	{

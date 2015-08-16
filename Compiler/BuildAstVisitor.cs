@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Adamant.Compiler.Antlr;
 using Adamant.Compiler.Ast;
+using Adamant.Compiler.Ast.Declarations;
+using Adamant.Compiler.Ast.Expressions;
+using Adamant.Compiler.Ast.Members;
 using Antlr4.Runtime.Tree;
 
 namespace Adamant.Compiler
@@ -46,12 +49,14 @@ namespace Adamant.Compiler
 
 		public override Node VisitCompilationUnit(AdamantParser.CompilationUnitContext context)
 		{
+			// TODO global attributes
 			var newContext = new UsingContext(usingContext, GetNamespaces(context.usingStatement()));
 			var visitor = new BuildAstVisitor(newContext, currentNamespace);
 			var declarations = context.declaration().Select(d => (IDeclarationContainer)d.Accept(visitor));
 			return new Assemblage(declarations);
 		}
 
+		#region Declarations
 		public override Node VisitNamespaceDeclaration(AdamantParser.NamespaceDeclarationContext context)
 		{
 			var namespaceName = context.namespaceName().GetText();
@@ -72,7 +77,10 @@ namespace Adamant.Compiler
 			var isSealed = Has(context.modifier(), AdamantLexer.Sealed);
 			var name = context.name.GetText();
 			var fullName = currentNamespace.Append(name);
-			return new ClassDeclaration(accessModifier, isPartial, safety, isSealed, isAbstract, fullName);
+			// TODO base types
+			// TODO type parameter constraints
+			var members = context.member().Select(m => (Member)m.Accept(this));
+			return new ClassDeclaration(accessModifier, isPartial, safety, isSealed, isAbstract, fullName, members);
 		}
 
 		public override Node VisitGlobalDeclaration(AdamantParser.GlobalDeclarationContext context)
@@ -80,8 +88,41 @@ namespace Adamant.Compiler
 			var accessModifier = GetAccessModifier(context.modifier());
 			var name = context.name.GetText();
 			var fullName = currentNamespace.Append(name);
-			return new GlobalDeclaration(accessModifier, fullName);
+			var initExpression = context.expression()?.Accept(this);
+			return new GlobalDeclaration(accessModifier, fullName, initExpression);
 		}
+
+		#endregion
+
+		#region Members
+		public override Node VisitField(AdamantParser.FieldContext context)
+		{
+			var accessModifier = GetAccessModifier(context.modifier());
+			var isLet = context.kind.Type == AdamantLexer.Let;
+			var isMutable = !isLet || context.mutable != null;
+			var name = new Name(context.identifier().GetText());
+			var type = context.type()?.Accept(this);
+			var initExpression = (Expression)context.expression()?.Accept(this);
+			return new Field(accessModifier, !isLet, isMutable, name, initExpression);
+		}
+		#endregion
+
+		#region Expressions
+		public override Node VisitNewObjectExpression(AdamantParser.NewObjectExpressionContext context)
+		{
+			var baseTypes = context.baseTypes();
+			var baseClass = baseTypes?.baseType;
+			var interfaces = baseTypes?._interfaces;
+			var members = context.member().Select(m => (Member)m.Accept(this));
+			return new NewObjectExpression(members);
+		}
+
+		public override Node VisitIntLiteralExpression(AdamantParser.IntLiteralExpressionContext context)
+		{
+			return new LiteralExpression();
+		}
+
+		#endregion
 
 		private static IEnumerable<QualifiedName> GetNamespaces(AdamantParser.UsingStatementContext[] contexts)
 		{
