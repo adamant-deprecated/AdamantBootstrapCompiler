@@ -29,8 +29,7 @@ namespaceName
 
 declaration
 	: 'namespace' namespaceName '{' usingStatement* declaration* '}'  #NamespaceDeclaration
-	| attribute* modifier* 'class' name=identifier typeParameterList?
-		(':' baseType=typeName? (':' interfaces+=typeName (',' interfaces+=typeName)*)?)?
+	| attribute* modifier* 'class' name=identifier typeParameterList? baseTypes?
 		typeParameterConstraintClause*
 		'{' member* '}' #ClassDeclaration
 	| attribute* modifier* kind=('var'|'let') name=identifier (':' type)? ('=' expression)? ';' #GlobalDeclaration
@@ -38,6 +37,10 @@ declaration
 
 attribute
 	: EscapedIdentifier ('(' ')')?
+	;
+
+baseTypes
+	: (':' baseType=typeName? (':' interfaces+=typeName (',' interfaces+=typeName)*)?)
 	;
 
 modifier
@@ -187,7 +190,7 @@ overloadableOperator
 	;
 
 field
-	: attribute* modifier* kind=('var'|'let') identifier (':' type)? ('=' expression)? ';'
+	: attribute* modifier* kind=('var'|'let') 'mut'? identifier (':' type)? ('=' expression)? ';'
 	;
 
 statement
@@ -233,6 +236,7 @@ expression
 	| <assoc=right> expression op=('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') expression #AssignmentExpression
 	| identifier											#VariableExpression
 	| 'new' typeName('.' identifier)? '(' argumentList ')'	#NewExpression
+	| 'new' baseTypes? '(' argumentList ')' '{' member* '}'	#NewAnonExpression
 	| 'null'												#NullLiteralExpression
 	| 'this'												#ThisExpression
 	| BooleanLiteral										#BooleanLiteralExpression

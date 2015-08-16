@@ -3,13 +3,13 @@ using System.Linq;
 
 namespace Adamant.Compiler.Ast
 {
-	public class Assemblage : Node
+	public class Assemblage : Node, IDeclarationContainer
 	{
 		private readonly IList<Declaration> declarations;
 
-		public Assemblage(IEnumerable<Declaration> declarations)
+		public Assemblage(IEnumerable<IDeclarationContainer> declarationContainers)
 		{
-			this.declarations = declarations.ToList();
+			declarations = declarationContainers.SelectMany(c => c.Declarations).ToList();
 		}
 
 		public IEnumerable<Declaration> Declarations => declarations;

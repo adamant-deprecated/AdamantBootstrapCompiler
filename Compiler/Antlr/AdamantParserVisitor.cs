@@ -82,6 +82,12 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAttribute([NotNull] AdamantParser.AttributeContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="AdamantParser.baseTypes"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBaseTypes([NotNull] AdamantParser.BaseTypesContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AdamantParser.modifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -474,6 +480,13 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitNewExpression([NotNull] AdamantParser.NewExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>NewAnonExpression</c>
+	/// labeled alternative in <see cref="AdamantParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNewAnonExpression([NotNull] AdamantParser.NewAnonExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>UninitializedExpression</c>
 	/// labeled alternative in <see cref="AdamantParser.expression"/>.

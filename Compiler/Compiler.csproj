@@ -86,9 +86,12 @@
     <Compile Include="Ast\Declaration.cs" />
     <Compile Include="Ast\FunctionDeclaration.cs" />
     <Compile Include="Ast\GlobalDeclaration.cs" />
+    <Compile Include="Ast\IDeclarationContainer.cs" />
     <Compile Include="Ast\Node.cs" />
     <Compile Include="Ast\QualifiedName.cs" />
+    <Compile Include="Ast\Safety.cs" />
     <Compile Include="Ast\Statement.cs" />
+    <Compile Include="Ast\UsingContext.cs" />
     <Compile Include="BuildAstVisitor.cs" />
     <Compile Include="Preprocessor\Conditional.cs" />
     <Compile Include="Preprocessor\PreprocessorState.cs" />

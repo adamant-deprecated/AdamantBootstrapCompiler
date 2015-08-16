@@ -1,6 +1,8 @@
-﻿namespace Adamant.Compiler.Ast
+﻿using System.Collections.Generic;
+
+namespace Adamant.Compiler.Ast
 {
-	public abstract class Declaration : Node
+	public abstract class Declaration : Node, IDeclarationContainer
 	{
 		protected Declaration(AccessModifier access, QualifiedName name)
 		{
@@ -10,5 +12,7 @@
 
 		public QualifiedName Name { get; private set; }
 		public AccessModifier Access { get; private set; }
+
+		IEnumerable<Declaration> IDeclarationContainer.Declarations => new[] { this };
 	}
 }

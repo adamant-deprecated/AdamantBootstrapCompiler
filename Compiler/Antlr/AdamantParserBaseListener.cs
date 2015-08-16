@@ -130,6 +130,18 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAttribute([NotNull] AdamantParser.AttributeContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.baseTypes"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBaseTypes([NotNull] AdamantParser.BaseTypesContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.baseTypes"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBaseTypes([NotNull] AdamantParser.BaseTypesContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.modifier"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -849,6 +861,18 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitNewExpression([NotNull] AdamantParser.NewExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.NewAnonExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNewAnonExpression([NotNull] AdamantParser.NewAnonExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.NewAnonExpression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNewAnonExpression([NotNull] AdamantParser.NewAnonExpressionContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.UninitializedExpression"/>.
 	/// <para>The default implementation does nothing.</para>

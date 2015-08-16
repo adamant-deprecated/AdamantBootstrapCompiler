@@ -116,6 +116,16 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAttribute([NotNull] AdamantParser.AttributeContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.baseTypes"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterBaseTypes([NotNull] AdamantParser.BaseTypesContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.baseTypes"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitBaseTypes([NotNull] AdamantParser.BaseTypesContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.modifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -781,6 +791,18 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitNewExpression([NotNull] AdamantParser.NewExpressionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>NewAnonExpression</c>
+	/// labeled alternative in <see cref="AdamantParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNewAnonExpression([NotNull] AdamantParser.NewAnonExpressionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>NewAnonExpression</c>
+	/// labeled alternative in <see cref="AdamantParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNewAnonExpression([NotNull] AdamantParser.NewAnonExpressionContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>UninitializedExpression</c>
 	/// labeled alternative in <see cref="AdamantParser.expression"/>.

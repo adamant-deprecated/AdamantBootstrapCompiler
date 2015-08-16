@@ -31,7 +31,12 @@ namespace Adamant.Compiler.Cmd
 			var syntaxCheck = new SyntaxCheckVisitor();
 			tree.Accept(syntaxCheck);
 			if(options.Action == CmdAction.PrintTree)
+			{
 				Console.WriteLine(tree.ToStringTree(parser));
+				return;
+			}
+			var buildAst = new BuildAstVisitor();
+			var ast = tree.Accept(buildAst);
 		}
 
 		private static CmdOptions ParseOptions(string[] args)
