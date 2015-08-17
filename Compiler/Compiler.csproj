@@ -84,6 +84,7 @@
     <Compile Include="Ast\Assemblage.cs" />
     <Compile Include="Ast\Declarations\ClassDeclaration.cs" />
     <Compile Include="Ast\Declaration.cs" />
+    <Compile Include="Ast\Members\Method.cs" />
     <Compile Include="Ast\Members\MethodLike.cs" />
     <Compile Include="Ast\Declarations\Parameter.cs" />
     <Compile Include="Ast\Expression.cs" />
@@ -95,12 +96,16 @@
     <Compile Include="Ast\Member.cs" />
     <Compile Include="Ast\Members\Constructor.cs" />
     <Compile Include="Ast\Members\Field.cs" />
+    <Compile Include="Ast\Members\Property.cs" />
     <Compile Include="Ast\Name.cs" />
     <Compile Include="Ast\Node.cs" />
     <Compile Include="Ast\QualifiedName.cs" />
     <Compile Include="Ast\Safety.cs" />
     <Compile Include="Ast\Statement.cs" />
     <Compile Include="Ast\Statements\ExpressionStatement.cs" />
+    <Compile Include="Ast\Statements\ForeachStatement.cs" />
+    <Compile Include="Ast\Statements\IfStatement.cs" />
+    <Compile Include="Ast\Statements\ReturnStatement.cs" />
     <Compile Include="Ast\Type.cs" />
     <Compile Include="Ast\Types\Ownership.cs" />
     <Compile Include="Ast\Types\OwnershipType.cs" />

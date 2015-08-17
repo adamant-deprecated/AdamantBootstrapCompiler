@@ -99,7 +99,6 @@ namespace Adamant.Compiler
 			//TODO implement
 			return new Parameter();
 		}
-
 		#endregion
 
 		#region Types
@@ -163,6 +162,22 @@ namespace Adamant.Compiler
 			var initExpression = (Expression)context.expression()?.Accept(this);
 			return new Field(accessModifier, isMutableReference, name, type, initExpression);
 		}
+
+		public override Node VisitProperty(AdamantParser.PropertyContext context)
+		{
+			var accessModifier = GetAccessModifier(context.modifier());
+			var parameters = context.parameterList()._parameters.Select(p => (Parameter)p.Accept(this));
+			var body = context.methodBody().statement().Select(s => (Statement)s.Accept(this));
+			return new Property(accessModifier, parameters, body);
+		}
+
+		public override Node VisitMethod(AdamantParser.MethodContext context)
+		{
+			var accessModifier = GetAccessModifier(context.modifier());
+			var parameters = context.parameterList()._parameters.Select(p => (Parameter)p.Accept(this));
+			var body = context.methodBody().statement().Select(s => (Statement)s.Accept(this));
+			return new Method(accessModifier, parameters, body);
+		}
 		#endregion
 
 		#region Statements
@@ -170,6 +185,24 @@ namespace Adamant.Compiler
 		{
 			//TODO implement
 			return new ExpressionStatement();
+		}
+
+		public override Node VisitReturnStatement(AdamantParser.ReturnStatementContext context)
+		{
+			// TODO implement
+			return new ReturnStatement();
+		}
+
+		public override Node VisitIfStatement(AdamantParser.IfStatementContext context)
+		{
+			// TODO implement
+			return new IfStatement();
+		}
+
+		public override Node VisitForeachStatement(AdamantParser.ForeachStatementContext context)
+		{
+			// TODO implement
+			return new ForeachStatement();
 		}
 		#endregion
 
