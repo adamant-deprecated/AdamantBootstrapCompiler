@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Adamant.Compiler.Antlr;
 
-namespace Adamant.Compiler
+namespace Adamant.Compiler.Analysis
 {
 	/// <summary>
 	/// This visitor enforces syntax rules not enforced by the grammar

@@ -10,7 +10,7 @@ using Adamant.Compiler.Ast.Statements;
 using Adamant.Compiler.Ast.Types;
 using Antlr4.Runtime.Tree;
 
-namespace Adamant.Compiler
+namespace Adamant.Compiler.Translation
 {
 	public class BuildAstVisitor : AdamantParserBaseVisitor<Node>
 	{

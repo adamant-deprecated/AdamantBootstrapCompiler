@@ -1,6 +1,8 @@
 ﻿using System;
+using Adamant.Compiler.Analysis;
 using Adamant.Compiler.Antlr;
 using Adamant.Compiler.Cmd.Options;
+using Adamant.Compiler.Translation;
 using Antlr4.Runtime;
 using NDesk.Options;
 using NDesk.Options.Extensions;

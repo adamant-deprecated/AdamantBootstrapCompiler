@@ -113,7 +113,7 @@
     <Compile Include="Ast\Types\PlainType.cs" />
     <Compile Include="Ast\Types\TypeName.cs" />
     <Compile Include="Ast\UsingContext.cs" />
-    <Compile Include="BuildAstVisitor.cs" />
+    <Compile Include="Translation\BuildAstVisitor.cs" />
     <Compile Include="Preprocessor\Conditional.cs" />
     <Compile Include="Preprocessor\PreprocessorState.cs" />
     <Compile Include="Preprocessor\PreprocessorVisitor.cs" />
@@ -121,7 +121,7 @@
     <Compile Include="Symbols\ChildSymbolTable.cs" />
     <Compile Include="Symbols\NullSymbolTable.cs" />
     <Compile Include="Symbols\SymbolTable.cs" />
-    <Compile Include="SyntaxCheckVisitor.cs" />
+    <Compile Include="Analysis\SyntaxCheckVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Antlr\AdamantCommon.g4" />
