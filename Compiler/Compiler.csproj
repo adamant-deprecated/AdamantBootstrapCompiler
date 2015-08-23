@@ -84,6 +84,7 @@
     <Compile Include="Ast\Assemblage.cs" />
     <Compile Include="Ast\Declarations\ClassDeclaration.cs" />
     <Compile Include="Ast\Declaration.cs" />
+    <Compile Include="Ast\Visitors\IDeclarationVisitor.cs" />
     <Compile Include="Ast\Members\Method.cs" />
     <Compile Include="Ast\Members\MethodLike.cs" />
     <Compile Include="Ast\Declarations\Parameter.cs" />

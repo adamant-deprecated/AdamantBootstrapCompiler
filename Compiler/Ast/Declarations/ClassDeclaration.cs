@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Adamant.Compiler.Ast.Visitors;
 
 namespace Adamant.Compiler.Ast.Declarations
 {
@@ -31,5 +32,9 @@ namespace Adamant.Compiler.Ast.Declarations
 		public bool IsAbstract { get; }
 
 		public IEnumerable<Node> Members => members;
+		public override TReturn Accept<TParam, TReturn>(IDeclarationVisitor<TParam, TReturn> visitor, TParam param)
+		{
+			return visitor.VisitClassDeclaration(this, param);
+		}
 	}
 }

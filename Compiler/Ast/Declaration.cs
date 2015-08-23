@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Adamant.Compiler.Ast.Visitors;
 
 namespace Adamant.Compiler.Ast
 {
@@ -14,5 +15,7 @@ namespace Adamant.Compiler.Ast
 		public AccessModifier Access { get; private set; }
 
 		IEnumerable<Declaration> IDeclarationContainer.Declarations => new[] { this };
+
+		public abstract TReturn Accept<TParam, TReturn>(IDeclarationVisitor<TParam, TReturn> visitor, TParam param);
 	}
 }
