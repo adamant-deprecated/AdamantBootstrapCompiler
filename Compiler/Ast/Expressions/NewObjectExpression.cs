@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Adamant.Compiler.Ast.Visitors;
 
 namespace Adamant.Compiler.Ast.Expressions
 {
@@ -17,5 +18,10 @@ namespace Adamant.Compiler.Ast.Expressions
 		}
 
 		public IEnumerable<Member> Members => members;
+
+		public override TReturn Accept<TParam, TReturn>(IExpressionVisitor<TParam, TReturn> visitor, TParam param)
+		{
+			return visitor.VisitNewObject(this, param);
+		}
 	}
 }

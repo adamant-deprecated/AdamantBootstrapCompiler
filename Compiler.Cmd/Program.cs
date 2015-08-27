@@ -1,6 +1,7 @@
 ﻿using System;
 using Adamant.Compiler.Analysis;
 using Adamant.Compiler.Antlr;
+using Adamant.Compiler.Ast;
 using Adamant.Compiler.Cmd.Options;
 using Adamant.Compiler.Translation;
 using Antlr4.Runtime;
@@ -27,8 +28,7 @@ namespace Adamant.Compiler.Cmd
 					Console.WriteLine(Format(token));
 				return;
 			}
-			var parser = new AdamantParser(tokens);
-			parser.BuildParseTree = true;
+			var parser = new AdamantParser(tokens) { BuildParseTree = true };
 			var tree = parser.compilationUnit();
 			var syntaxCheck = new SyntaxCheckVisitor();
 			tree.Accept(syntaxCheck);
@@ -38,7 +38,9 @@ namespace Adamant.Compiler.Cmd
 				return;
 			}
 			var buildAst = new BuildAstVisitor();
-			var ast = tree.Accept(buildAst);
+			var ast = (Assemblage)tree.Accept(buildAst);
+			var borrowChecker = new BorrowChecker();
+			borrowChecker.Check(ast);
 		}
 
 		private static CmdOptions ParseOptions(string[] args)

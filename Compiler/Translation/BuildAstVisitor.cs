@@ -88,10 +88,12 @@ namespace Adamant.Compiler.Translation
 		public override Node VisitGlobalDeclaration(AdamantParser.GlobalDeclarationContext context)
 		{
 			var accessModifier = GetAccessModifier(context.modifier());
+			var isMutableReference = context.kind.Type == AdamantLexer.Var;
 			var name = context.name.GetText();
 			var fullName = currentNamespace.Append(name);
-			var initExpression = context.expression()?.Accept(this);
-			return new GlobalDeclaration(accessModifier, fullName, initExpression);
+			var type = (OwnershipType)context.ownershipType()?.Accept(this) ?? OwnershipType.NewInferred();
+			var initExpression = (Expression)context.expression()?.Accept(this);
+			return new GlobalDeclaration(accessModifier, isMutableReference, fullName, type, initExpression);
 		}
 
 		public override Node VisitParameter(AdamantParser.ParameterContext context)
@@ -127,7 +129,7 @@ namespace Adamant.Compiler.Translation
 		{
 			var isReference = context.@ref != null;
 			var type = (PlainType)context.plainType().Accept(this);
-			return new OwnershipType(isReference, Ownership.Implicit, type);
+			return new OwnershipType(isReference, Ownership.Inferred, type);
 		}
 
 		public override Node VisitNamedType(AdamantParser.NamedTypeContext context)
@@ -158,7 +160,7 @@ namespace Adamant.Compiler.Translation
 			var accessModifier = GetAccessModifier(context.modifier());
 			var isMutableReference = context.kind.Type == AdamantLexer.Var;
 			var name = new Name(context.identifier().GetText());
-			var type = (OwnershipType)context.ownershipType()?.Accept(this);
+			var type = (OwnershipType)context.ownershipType()?.Accept(this) ?? OwnershipType.NewInferred();
 			var initExpression = (Expression)context.expression()?.Accept(this);
 			return new Field(accessModifier, isMutableReference, name, type, initExpression);
 		}

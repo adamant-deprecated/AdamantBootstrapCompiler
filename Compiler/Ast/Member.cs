@@ -1,4 +1,6 @@
-﻿namespace Adamant.Compiler.Ast
+﻿using Adamant.Compiler.Ast.Visitors;
+
+namespace Adamant.Compiler.Ast
 {
 	public abstract class Member : Node
 	{
@@ -8,5 +10,7 @@
 		}
 
 		public AccessModifier Access { get; }
+
+		public abstract TReturn Accept<TParam, TReturn>(IMemberVisitor<TParam, TReturn> visitor, TParam param);
 	}
 }

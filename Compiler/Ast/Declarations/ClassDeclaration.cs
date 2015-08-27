@@ -31,7 +31,7 @@ namespace Adamant.Compiler.Ast.Declarations
 		public bool IsSealed { get; }
 		public bool IsAbstract { get; }
 
-		public IEnumerable<Node> Members => members;
+		public IEnumerable<Member> Members => members;
 		public override TReturn Accept<TParam, TReturn>(IDeclarationVisitor<TParam, TReturn> visitor, TParam param)
 		{
 			return visitor.VisitClassDeclaration(this, param);

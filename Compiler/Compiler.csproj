@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\BorrowChecker.cs" />
     <Compile Include="Antlr\AdamantLexer.cs">
       <DependentUpon>AdamantLexer.g4</DependentUpon>
     </Compile>
@@ -84,6 +85,7 @@
     <Compile Include="Ast\Assemblage.cs" />
     <Compile Include="Ast\Declarations\ClassDeclaration.cs" />
     <Compile Include="Ast\Declaration.cs" />
+    <Compile Include="Ast\Types\InferredType.cs" />
     <Compile Include="Ast\Visitors\IDeclarationVisitor.cs" />
     <Compile Include="Ast\Members\Method.cs" />
     <Compile Include="Ast\Members\MethodLike.cs" />
@@ -113,6 +115,8 @@
     <Compile Include="Ast\Types\PlainType.cs" />
     <Compile Include="Ast\Types\TypeName.cs" />
     <Compile Include="Ast\UsingContext.cs" />
+    <Compile Include="Ast\Visitors\IExpressionVisitor.cs" />
+    <Compile Include="Ast\Visitors\IMemberVisitor.cs" />
     <Compile Include="Translation\BuildAstVisitor.cs" />
     <Compile Include="Preprocessor\Conditional.cs" />
     <Compile Include="Preprocessor\PreprocessorState.cs" />
