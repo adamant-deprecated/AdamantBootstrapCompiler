@@ -96,6 +96,16 @@ namespace Adamant.Compiler.Translation
 			return new GlobalDeclaration(accessModifier, isMutableReference, fullName, type, initExpression);
 		}
 
+		public override Node VisitFunctionDeclaration(AdamantParser.FunctionDeclarationContext context)
+		{
+			var accessModifier = GetAccessModifier(context.modifier());
+			var parameters = context.parameterList()._parameters.Select(p => (Parameter)p.Accept(this));
+			var name = context.name.GetText();
+			var fullName = currentNamespace.Append(name);
+			var body = context.methodBody().statement().Select(s => (Statement)s.Accept(this));
+			return new FunctionDeclaration(accessModifier, fullName, parameters, body);
+		}
+
 		public override Node VisitParameter(AdamantParser.ParameterContext context)
 		{
 			//TODO implement

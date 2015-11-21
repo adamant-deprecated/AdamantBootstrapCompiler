@@ -106,6 +106,18 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitGlobalDeclaration([NotNull] AdamantParser.GlobalDeclarationContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>FunctionDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunctionDeclaration([NotNull] AdamantParser.FunctionDeclarationContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>FunctionDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunctionDeclaration([NotNull] AdamantParser.FunctionDeclarationContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.attribute"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -235,6 +247,18 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitArrayType([NotNull] AdamantParser.ArrayTypeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ArraySliceType</c>
+	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterArraySliceType([NotNull] AdamantParser.ArraySliceTypeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ArraySliceType</c>
+	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitArraySliceType([NotNull] AdamantParser.ArraySliceTypeContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>NamedType</c>
 	/// labeled alternative in <see cref="AdamantParser.plainType"/>.

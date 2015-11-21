@@ -33,6 +33,7 @@ declaration
 		typeParameterConstraintClause*
 		'{' member* '}' #ClassDeclaration
 	| attribute* modifier* kind=('var'|'let') name=identifier (':' ownershipType)? ('=' expression)? ';' #GlobalDeclaration
+	| attribute* modifier* name=identifier typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody	 #FunctionDeclaration
 	;
 
 attribute
@@ -57,6 +58,7 @@ modifier
 	| Symbol='sealed'
 	| Symbol='override'
 	| Symbol='const'
+	| Symbol='async'
 	;
 
 typeParameterList
@@ -87,6 +89,7 @@ plainType
 	: typeName													#NamedType
 	| plainType '*'												#PointerType
 	| plainType '[' constExpression (',' constExpression)* ']'	#ArrayType
+	| plainType '[' ','* ']'									#ArraySliceType
 	| funcTypeParameterList '=>' ownershipType					#FunctionType
 	;
 

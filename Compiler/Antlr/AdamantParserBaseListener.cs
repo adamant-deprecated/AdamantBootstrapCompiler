@@ -118,6 +118,18 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitGlobalDeclaration([NotNull] AdamantParser.GlobalDeclarationContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.FunctionDeclaration"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFunctionDeclaration([NotNull] AdamantParser.FunctionDeclarationContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.FunctionDeclaration"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFunctionDeclaration([NotNull] AdamantParser.FunctionDeclarationContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.attribute"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -261,6 +273,18 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitArrayType([NotNull] AdamantParser.ArrayTypeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.ArraySliceType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterArraySliceType([NotNull] AdamantParser.ArraySliceTypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.ArraySliceType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitArraySliceType([NotNull] AdamantParser.ArraySliceTypeContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.NamedType"/>.
 	/// <para>The default implementation does nothing.</para>

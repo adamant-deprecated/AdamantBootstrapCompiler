@@ -76,6 +76,13 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitGlobalDeclaration([NotNull] AdamantParser.GlobalDeclarationContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>FunctionDeclaration</c>
+	/// labeled alternative in <see cref="AdamantParser.declaration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunctionDeclaration([NotNull] AdamantParser.FunctionDeclarationContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AdamantParser.attribute"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -152,6 +159,13 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitArrayType([NotNull] AdamantParser.ArrayTypeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ArraySliceType</c>
+	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArraySliceType([NotNull] AdamantParser.ArraySliceTypeContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>NamedType</c>
 	/// labeled alternative in <see cref="AdamantParser.plainType"/>.

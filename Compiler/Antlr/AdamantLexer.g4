@@ -95,27 +95,36 @@ Yield : 'yeild';
 Switch : 'switch';
 Break : 'break';
 Continue : 'continue';
+
 //Exceptions
 Try : 'try';
 Catch : 'catch';
 Finally : 'finally';
 Throw : 'throw';
+
 // Conversion
 Implicit : 'implicit';
 Explicit : 'explicit';
 Conversion : 'conversion';
+
 // Access modifiers
 Public : 'public';
 Private : 'private';
 Protected : 'protected';
 Package : 'package';
+
 // Safety
 Safe : 'safe';
 Unsafe : 'unsafe';
+
 // Ownership
 Own : 'own';
 Mutable : 'mut';
 Immutable : 'immut';
+
+// Async
+Async: 'async';
+Await: 'await';
 
 //*************
 // Literals

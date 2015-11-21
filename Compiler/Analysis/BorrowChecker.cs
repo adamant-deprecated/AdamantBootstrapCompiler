@@ -34,7 +34,16 @@ namespace Adamant.Compiler.Analysis
 
 		Void IDeclarationVisitor<Void, Void>.VisitFunctionDeclaration(FunctionDeclaration declaration, Void param)
 		{
-			throw new System.NotImplementedException();
+			foreach(var parameter in declaration.Parameters)
+			{
+				//TODO parameter.Type.DefaultOwnership(Ownership.ImmutableBorrow);
+			}
+
+			foreach(var statement in declaration.Body)
+			{
+				// TODO
+			}
+			return Void.Value;
 		}
 
 		Void IDeclarationVisitor<Void, Void>.VisitGlobalDeclaration(GlobalDeclaration declaration, Void param)
