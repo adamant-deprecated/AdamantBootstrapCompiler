@@ -2,8 +2,9 @@
 {
 	public enum CmdAction
 	{
-		Compile = 0,
-		Tokenize = 1,
-		PrintTree = 2,
+		Compile,
+		Tokenize,
+		PrintTree,
+		Forge,
 	}
 }

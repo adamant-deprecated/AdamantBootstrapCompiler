@@ -3,6 +3,7 @@
 	public class CmdOptions
 	{
 		public CmdAction Action;
-		internal string File;
+		internal string FilePath;
+		internal string OutputPath;
 	}
 }
