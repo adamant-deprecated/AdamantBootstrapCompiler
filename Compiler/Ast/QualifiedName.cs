@@ -39,5 +39,21 @@ namespace Adamant.Compiler.Ast
 		{
 			return value;
 		}
+
+		public QualifiedName Namespace()
+		{
+			if(!value.Contains("."))
+				return None;
+
+			return new QualifiedName(value.Substring(0, value.LastIndexOf('.')));
+		}
+
+		public string Name()
+		{
+			if(!value.Contains("."))
+				return value;
+
+			return value.Substring(value.LastIndexOf('.') + 1);
+		}
 	}
 }

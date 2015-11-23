@@ -11,6 +11,7 @@ using Adamant.Compiler.Translation;
 using Antlr4.Runtime;
 using NDesk.Options;
 using NDesk.Options.Extensions;
+using Newtonsoft.Json;
 
 namespace Adamant.Compiler.Cmd
 {
@@ -190,6 +191,12 @@ namespace Adamant.Compiler.Cmd
 
 		private static void Forge(string projectFilePath)
 		{
+			var project = JsonConvert.DeserializeObject<Project>(File.ReadAllText(projectFilePath));
+			var compileDir = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(projectFilePath), ".bootstrapCompile"));
+			if(compileDir.Exists)
+				compileDir.Delete(true);
+			compileDir.Create();
+
 			throw new NotImplementedException();
 		}
 	}
