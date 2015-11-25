@@ -3,11 +3,12 @@ using System.IO;
 using System.Text;
 using Adamant.Compiler.Ast;
 using Adamant.Compiler.Ast.Declarations;
+using Adamant.Compiler.Ast.Types;
 using Adamant.Compiler.Ast.Visitors;
 
 namespace Adamant.Compiler.Gen.CSharp
 {
-	public class CSharpGenerator : IDeclarationVisitor<Void, Void>
+	public class CSharpGenerator : IDeclarationVisitor<Void, Void>, ITypeVisitor<Void, Void>
 	{
 		private readonly TextWriter output;
 		private readonly StringBuilder indent = new StringBuilder();
@@ -79,7 +80,7 @@ namespace Adamant.Compiler.Gen.CSharp
 				EndBlock();
 		}
 
-		private string Format(AccessModifier accessModifier)
+		private static string Format(AccessModifier accessModifier)
 		{
 			return accessModifier.ToString().ToLowerInvariant();
 		}
@@ -88,7 +89,7 @@ namespace Adamant.Compiler.Gen.CSharp
 		#region Declaration Visitor
 		Void IDeclarationVisitor<Void, Void>.VisitClassDeclaration(ClassDeclaration declaration, Void param)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		Void IDeclarationVisitor<Void, Void>.VisitFunctionDeclaration(FunctionDeclaration declaration, Void param)
@@ -96,10 +97,12 @@ namespace Adamant.Compiler.Gen.CSharp
 			var ns = BeginNamespace(declaration.Name);
 			// Container static class
 			BlankLine();
-			output.WriteLine(indent + "public partial static class אFuncs");
+			output.WriteLine(indent + "public static partial class אFuncs");
 			BeginBlock();
 			// Declaration
-			output.Write(indent + Format(declaration.Access) + " " + declaration.Name.Name() + "(");
+			output.Write(indent + Format(declaration.Access) + " static ");
+			declaration.ReturnType.Accept(this, Void.Value);
+			output.Write(" " + declaration.Name.Name() + "(");
 			output.WriteLine(")");
 			// Body
 			BeginBlock();
@@ -116,6 +119,21 @@ namespace Adamant.Compiler.Gen.CSharp
 		}
 		#endregion
 
+		#region Type Visitor
+		Void ITypeVisitor<Void, Void>.VisitInferredType(InferredType type, Void param)
+		{
+			throw new NotImplementedException();
+		}
 
+		Void ITypeVisitor<Void, Void>.VisitOwnershipType(OwnershipType type, Void param)
+		{
+			throw new NotImplementedException();
+		}
+
+		Void ITypeVisitor<Void, Void>.VisitTypeName(TypeName type, Void param)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 	}
 }

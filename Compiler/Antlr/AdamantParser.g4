@@ -33,7 +33,7 @@ declaration
 		typeParameterConstraintClause*
 		'{' member* '}' #ClassDeclaration
 	| attribute* modifier* kind=('var'|'let') name=identifier (':' ownershipType)? ('=' expression)? ';' #GlobalDeclaration
-	| attribute* modifier* name=identifier typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody	 #FunctionDeclaration
+	| attribute* modifier* name=identifier typeArguments? parameterList '=>' returnType=ownershipType typeParameterConstraintClause* methodBody	 #FunctionDeclaration
 	;
 
 attribute
@@ -126,7 +126,7 @@ member
 	| attribute* modifier* 'operator' overloadableOperator parameterList '=>' ownershipType methodBody												#OperatorOverloadMethod
 	| attribute* modifier* kind=('var'|'let') identifier (':' ownershipType)? ('=' expression)? ';'													#Field
 	| attribute* modifier* kind=('get'|'set') identifier typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody	#Property
-	| attribute* modifier* identifier typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody						#Method
+	| attribute* modifier* identifier typeArguments? parameterList '=>' returnType=ownershipType typeParameterConstraintClause* methodBody						#Method
 	;
 
 parameterList

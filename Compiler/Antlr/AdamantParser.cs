@@ -388,17 +388,18 @@ public partial class AdamantParser : Parser {
 	}
 	public partial class FunctionDeclarationContext : DeclarationContext {
 		public IdentifierContext name;
+		public OwnershipTypeContext returnType;
 		public ParameterListContext parameterList() {
 			return GetRuleContext<ParameterListContext>(0);
-		}
-		public OwnershipTypeContext ownershipType() {
-			return GetRuleContext<OwnershipTypeContext>(0);
 		}
 		public MethodBodyContext methodBody() {
 			return GetRuleContext<MethodBodyContext>(0);
 		}
 		public IdentifierContext identifier() {
 			return GetRuleContext<IdentifierContext>(0);
+		}
+		public OwnershipTypeContext ownershipType() {
+			return GetRuleContext<OwnershipTypeContext>(0);
 		}
 		public AttributeContext[] attribute() {
 			return GetRuleContexts<AttributeContext>();
@@ -784,7 +785,7 @@ public partial class AdamantParser : Parser {
 
 				State = 180; parameterList();
 				State = 181; Match(Lambda);
-				State = 182; ownershipType();
+				State = 182; ((FunctionDeclarationContext)_localctx).returnType = ownershipType();
 				State = 186;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
@@ -2384,17 +2385,18 @@ public partial class AdamantParser : Parser {
 		}
 	}
 	public partial class MethodContext : MemberContext {
+		public OwnershipTypeContext returnType;
 		public IdentifierContext identifier() {
 			return GetRuleContext<IdentifierContext>(0);
 		}
 		public ParameterListContext parameterList() {
 			return GetRuleContext<ParameterListContext>(0);
 		}
-		public OwnershipTypeContext ownershipType() {
-			return GetRuleContext<OwnershipTypeContext>(0);
-		}
 		public MethodBodyContext methodBody() {
 			return GetRuleContext<MethodBodyContext>(0);
+		}
+		public OwnershipTypeContext ownershipType() {
+			return GetRuleContext<OwnershipTypeContext>(0);
 		}
 		public AttributeContext[] attribute() {
 			return GetRuleContexts<AttributeContext>();
@@ -2891,7 +2893,7 @@ public partial class AdamantParser : Parser {
 
 				State = 537; parameterList();
 				State = 538; Match(Lambda);
-				State = 539; ownershipType();
+				State = 539; ((MethodContext)_localctx).returnType = ownershipType();
 				State = 543;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);

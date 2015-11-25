@@ -6,5 +6,6 @@ namespace Adamant.Compiler.Cmd
 	{
 		public string Version { get; set; }
 		public IList<string> Authors { get; set; }
+		public string Template { get; set; }
 	}
 }

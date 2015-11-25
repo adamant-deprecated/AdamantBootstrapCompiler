@@ -1,8 +1,9 @@
 ﻿using System;
+using Adamant.Compiler.Ast.Visitors;
 
 namespace Adamant.Compiler.Ast.Types
 {
-	public class OwnershipType : TypeNode
+	public class OwnershipType : Type
 	{
 		public OwnershipType(bool isReference, Ownership ownership, PlainType type)
 		{
@@ -37,6 +38,11 @@ namespace Adamant.Compiler.Ast.Types
 		public static OwnershipType NewInferred()
 		{
 			return new OwnershipType(false, Ownership.Inferred, new InferredType());
+		}
+
+		public override TReturn Accept<TParam, TReturn>(ITypeVisitor<TParam, TReturn> visitor, TParam param)
+		{
+			return visitor.VisitOwnershipType(this, param);
 		}
 	}
 }

@@ -117,6 +117,7 @@
     <Compile Include="Ast\UsingContext.cs" />
     <Compile Include="Ast\Visitors\IExpressionVisitor.cs" />
     <Compile Include="Ast\Visitors\IMemberVisitor.cs" />
+    <Compile Include="Ast\Visitors\ITypeVisitor.cs" />
     <Compile Include="Translation\BuildAstVisitor.cs" />
     <Compile Include="Preprocessor\Conditional.cs" />
     <Compile Include="Preprocessor\PreprocessorState.cs" />

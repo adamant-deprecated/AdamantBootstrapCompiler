@@ -9,6 +9,7 @@ using Adamant.Compiler.Ast.Members;
 using Adamant.Compiler.Ast.Statements;
 using Adamant.Compiler.Ast.Types;
 using Antlr4.Runtime.Tree;
+using Type = Adamant.Compiler.Ast.Type;
 
 namespace Adamant.Compiler.Translation
 {
@@ -102,8 +103,9 @@ namespace Adamant.Compiler.Translation
 			var parameters = context.parameterList()._parameters.Select(p => (Parameter)p.Accept(this));
 			var name = context.name.GetText();
 			var fullName = currentNamespace.Append(name);
+			var returnType = (Type)context.returnType.Accept(this);
 			var body = context.methodBody().statement().Select(s => (Statement)s.Accept(this));
-			return new FunctionDeclaration(accessModifier, fullName, parameters, body);
+			return new FunctionDeclaration(accessModifier, fullName, parameters, returnType, body);
 		}
 
 		public override Node VisitParameter(AdamantParser.ParameterContext context)
@@ -222,8 +224,8 @@ namespace Adamant.Compiler.Translation
 		public override Node VisitNewObjectExpression(AdamantParser.NewObjectExpressionContext context)
 		{
 			var baseTypes = context.baseTypes();
-			var baseClass = (TypeNode)baseTypes?.baseType?.Accept(this);
-			var interfaces = baseTypes?._interfaces.Select(i => (TypeNode)i.Accept(this)).ToList() ?? new List<TypeNode>();
+			var baseClass = (Type)baseTypes?.baseType?.Accept(this);
+			var interfaces = baseTypes?._interfaces.Select(i => (Type)i.Accept(this)).ToList() ?? new List<Type>();
 			var members = context.member().Select(m => (Member)m.Accept(this));
 			return new NewObjectExpression(baseClass, interfaces, members);
 		}

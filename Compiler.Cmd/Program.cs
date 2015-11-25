@@ -2,13 +2,19 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Adamant.Compiler.Analysis;
 using Adamant.Compiler.Antlr;
 using Adamant.Compiler.Ast;
 using Adamant.Compiler.Cmd.Options;
 using Adamant.Compiler.Gen.CSharp;
+using Adamant.Compiler.Runtime;
 using Adamant.Compiler.Translation;
 using Antlr4.Runtime;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
 using NDesk.Options;
 using NDesk.Options.Extensions;
 using Newtonsoft.Json;
@@ -173,7 +179,18 @@ namespace Adamant.Compiler.Cmd
 
 		private static void Compile(string codePath, string outputPath)
 		{
-			var output = outputPath != null ? File.CreateText(outputPath) : Console.Out;
+			if(outputPath != null)
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+				using(var file = File.CreateText(outputPath))
+					Compile(codePath, file);
+			}
+			else
+				Compile(codePath, Console.Out);
+		}
+
+		private static void Compile(string codePath, TextWriter output)
+		{
 			var stream = new AntlrFileStream(codePath);
 			var lexer = new AdamantLexer(stream);
 			var tokens = new CommonTokenStream(lexer);
@@ -192,12 +209,69 @@ namespace Adamant.Compiler.Cmd
 		private static void Forge(string projectFilePath)
 		{
 			var project = JsonConvert.DeserializeObject<Project>(File.ReadAllText(projectFilePath));
-			var compileDir = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(projectFilePath), ".bootstrapCompile"));
-			if(compileDir.Exists)
-				compileDir.Delete(true);
-			compileDir.Create();
+			var projectDirPath = Path.GetFullPath(Path.GetDirectoryName(projectFilePath));
+			var compileDirPath = Path.Combine(projectDirPath, ".bootstrapCompile");
+			DeleteDirectoryIfExists(compileDirPath);
 
-			throw new NotImplementedException();
+			var srcFiles = new DirectoryInfo(Path.Combine(projectDirPath, "src")).GetFiles("*.adam", SearchOption.AllDirectories);
+
+			foreach(var srcFile in srcFiles)
+			{
+				var relPath = Path.GetFullPath(srcFile.FullName).Substring(projectDirPath.Length + 1);
+				var csPath = Path.ChangeExtension(relPath, "cs");
+				Compile(srcFile.FullName, Path.Combine(compileDirPath, csPath));
+			}
+
+			var isApp = project.Template == "app";
+			if(isApp)
+			{
+				// TODO generate entry point
+			}
+
+			var binDirPath = Path.Combine(projectDirPath, "bin");
+			DeleteDirectoryIfExists(binDirPath);
+			var csSrc = new DirectoryInfo(compileDirPath).GetDirectories("src").Single().GetFiles("*.cs", SearchOption.AllDirectories);
+			var assemblyName = Path.ChangeExtension(Path.GetFileName(projectDirPath), isApp ? "exe" : "dll");
+			var assemblyPath = Path.Combine(binDirPath, assemblyName);
+			CompileCSharp(csSrc, assemblyPath);
+		}
+
+		private static void DeleteDirectoryIfExists(string path)
+		{
+			if(Directory.Exists(path))
+				Directory.Delete(path, true);
+		}
+
+		private static void CompileCSharp(FileInfo[] sources, string assemblyPath)
+		{
+			Directory.CreateDirectory(Path.GetDirectoryName(assemblyPath));
+			EmitResult result;
+			using(var stream = File.Create(assemblyPath))
+			{
+				var assemblyFileName = Path.GetFileName(assemblyPath);
+
+				var syntaxTrees = sources.Select(src => CSharpSyntaxTree.ParseText(File.ReadAllText(src.FullName))).ToArray();
+				var compilation = CSharpCompilation.Create(assemblyFileName,
+					syntaxTrees,
+					new[]
+					{
+						MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+						MetadataReference.CreateFromFile(typeof(אArray).Assembly.Location)
+					},
+					new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+					);
+
+
+				result = compilation.Emit(stream);
+			}
+			if(!result.Success)
+			{
+				File.Delete(assemblyPath);
+				foreach(var diagnostic in result.Diagnostics)
+				{
+					Console.WriteLine(diagnostic);
+				}
+			}
 		}
 	}
 }

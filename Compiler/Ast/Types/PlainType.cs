@@ -1,6 +1,6 @@
 ﻿namespace Adamant.Compiler.Ast.Types
 {
-	public abstract class PlainType : TypeNode
+	public abstract class PlainType : Type
 	{
 	}
 }
