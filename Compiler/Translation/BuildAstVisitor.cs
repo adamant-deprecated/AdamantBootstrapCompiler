@@ -110,8 +110,11 @@ namespace Adamant.Compiler.Translation
 
 		public override Node VisitParameter(AdamantParser.ParameterContext context)
 		{
-			//TODO implement
-			return new Parameter();
+			// TODO modifiers
+			// TODO this parameter
+			var name = context.name.GetText();
+			var type = (Type)context.type.Accept(this);
+			return new Parameter(name, type);
 		}
 		#endregion
 
@@ -155,6 +158,14 @@ namespace Adamant.Compiler.Translation
 			var name = new Name(context.identifier().GetText());
 			return new TypeName(outerType, name);
 		}
+
+		public override Node VisitArraySliceType(AdamantParser.ArraySliceTypeContext context)
+		{
+			var elementType = (Type)context.elementType.Accept(this);
+			var dimensions = context._dimensions.Count + 1;
+			return new ArraySliceType(elementType, dimensions);
+		}
+
 		#endregion
 
 		#region Members

@@ -86,11 +86,11 @@ ownershipType // these are types with ownership modifiers
 	;
 
 plainType
-	: typeName													#NamedType
-	| plainType '*'												#PointerType
-	| plainType '[' constExpression (',' constExpression)* ']'	#ArrayType
-	| plainType '[' ','* ']'									#ArraySliceType
-	| funcTypeParameterList '=>' ownershipType					#FunctionType
+	: typeName																#NamedType
+	| valueType=plainType '*'												#PointerType
+	| elementType=plainType '[' constExpression (',' constExpression)* ']'	#ArrayType
+	| elementType=plainType '[' dimensions+=','* ']'						#ArraySliceType
+	| funcTypeParameterList '=>' ownershipType								#FunctionType
 	;
 
 funcTypeParameterList
@@ -135,8 +135,8 @@ parameterList
 	;
 
 parameter
-	: parameterModifier* identifier? ':' ownershipType
-	| parameterModifier* 'this' (':' 'mut')?
+	: modifiers=parameterModifier* name=identifier? ':' type=ownershipType
+	| modifiers=parameterModifier* 'this' (':' 'mut')?
 	;
 
 parameterModifier

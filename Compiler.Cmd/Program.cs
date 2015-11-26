@@ -2,22 +2,19 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Adamant.Compiler.Analysis;
 using Adamant.Compiler.Antlr;
 using Adamant.Compiler.Ast;
 using Adamant.Compiler.Cmd.Options;
 using Adamant.Compiler.Gen.CSharp;
-using Adamant.Compiler.Runtime;
-using Adamant.Compiler.Translation;
 using Antlr4.Runtime;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using Microsoft.CodeAnalysis.Text;
 using NDesk.Options;
 using NDesk.Options.Extensions;
 using Newtonsoft.Json;
+using אRuntime;
 
 namespace Adamant.Compiler.Cmd
 {
@@ -177,19 +174,19 @@ namespace Adamant.Compiler.Cmd
 			output.WriteLine(tree.ToStringTree(parser));
 		}
 
-		private static void Compile(string codePath, string outputPath)
+		private static GenMetaData Compile(string codePath, string outputPath)
 		{
 			if(outputPath != null)
 			{
 				Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
 				using(var file = File.CreateText(outputPath))
-					Compile(codePath, file);
+					return Compile(codePath, file);
 			}
 			else
-				Compile(codePath, Console.Out);
+				return Compile(codePath, Console.Out);
 		}
 
-		private static void Compile(string codePath, TextWriter output)
+		private static GenMetaData Compile(string codePath, TextWriter output)
 		{
 			var stream = new AntlrFileStream(codePath);
 			var lexer = new AdamantLexer(stream);
@@ -198,12 +195,12 @@ namespace Adamant.Compiler.Cmd
 			var tree = parser.compilationUnit();
 			var syntaxCheck = new SyntaxCheckVisitor();
 			tree.Accept(syntaxCheck);
-			var buildAst = new BuildAstVisitor();
-			var ast = (Assemblage)tree.Accept(buildAst);
-			var borrowChecker = new BorrowChecker();
-			borrowChecker.Check(ast);
+			//var buildAst = new BuildAstVisitor();
+			//var ast = (Assemblage)tree.Accept(buildAst);
+			//var borrowChecker = new BorrowChecker();
+			//borrowChecker.Check(ast);
 			var cSharpGenerator = new CSharpGenerator(output);
-			cSharpGenerator.GenerateFor(ast);
+			return tree.Accept(cSharpGenerator);
 		}
 
 		private static void Forge(string projectFilePath)
@@ -215,12 +212,19 @@ namespace Adamant.Compiler.Cmd
 
 			var srcFiles = new DirectoryInfo(Path.Combine(projectDirPath, "src")).GetFiles("*.adam", SearchOption.AllDirectories);
 
-			foreach(var srcFile in srcFiles)
+			var metaData = srcFiles.Select(srcFile =>
 			{
 				var relPath = Path.GetFullPath(srcFile.FullName).Substring(projectDirPath.Length + 1);
 				var csPath = Path.ChangeExtension(relPath, "cs");
-				Compile(srcFile.FullName, Path.Combine(compileDirPath, csPath));
-			}
+				return Compile(srcFile.FullName, Path.Combine(compileDirPath, csPath));
+			}).Combine();
+
+			var mainFunctions = metaData.MainFunctions.ToList();
+			if(mainFunctions.Count > 1)
+				throw new Exception("Multiple main functions");
+
+			if(mainFunctions.Count == 1)
+				GenerateEntryPoint(compileDirPath, mainFunctions.Single());
 
 			var isApp = project.Template == "app";
 			if(isApp)
@@ -231,9 +235,23 @@ namespace Adamant.Compiler.Cmd
 			var binDirPath = Path.Combine(projectDirPath, "bin");
 			DeleteDirectoryIfExists(binDirPath);
 			var csSrc = new DirectoryInfo(compileDirPath).GetDirectories("src").Single().GetFiles("*.cs", SearchOption.AllDirectories);
-			var assemblyName = Path.ChangeExtension(Path.GetFileName(projectDirPath), isApp ? "exe" : "dll");
+			var assemblyName = Path.GetFileName(projectDirPath);
 			var assemblyPath = Path.Combine(binDirPath, assemblyName);
-			CompileCSharp(csSrc, assemblyPath);
+			CompileCSharp(csSrc, assemblyPath, isApp);
+		}
+
+		private static void GenerateEntryPoint(string compileDirPath, QualifiedName mainFunction)
+		{
+			using(var file = File.CreateText(Path.Combine(compileDirPath, "src/אEntryPoint.cs")))
+			{
+				file.WriteLine("public class אEntryPoint");
+				file.WriteLine("{");
+				file.WriteLine("	public static void Main(string[] args)");
+				file.WriteLine("	{");
+				file.WriteLine($"		{ mainFunction}(new א.System.Console.Console(), args);");
+				file.WriteLine("	}");
+				file.WriteLine("}");
+			}
 		}
 
 		private static void DeleteDirectoryIfExists(string path)
@@ -242,23 +260,26 @@ namespace Adamant.Compiler.Cmd
 				Directory.Delete(path, true);
 		}
 
-		private static void CompileCSharp(FileInfo[] sources, string assemblyPath)
+		private static void CompileCSharp(FileInfo[] sources, string assemblyPath, bool isApp)
 		{
+			assemblyPath = Path.ChangeExtension(assemblyPath, isApp ? "exe" : "dll");
 			Directory.CreateDirectory(Path.GetDirectoryName(assemblyPath));
 			EmitResult result;
+			var assemblyFileName = Path.GetFileName(assemblyPath);
+
+			var syntaxTrees = sources.Select(src => CSharpSyntaxTree.ParseText(File.ReadAllText(src.FullName))).ToArray();
+			var references = new[]
+			{
+				MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+				MetadataReference.CreateFromFile(typeof(אArray).Assembly.Location),
+				MetadataReference.CreateFromFile(typeof(א.System.Console.Console).Assembly.Location),
+			};
 			using(var stream = File.Create(assemblyPath))
 			{
-				var assemblyFileName = Path.GetFileName(assemblyPath);
-
-				var syntaxTrees = sources.Select(src => CSharpSyntaxTree.ParseText(File.ReadAllText(src.FullName))).ToArray();
 				var compilation = CSharpCompilation.Create(assemblyFileName,
 					syntaxTrees,
-					new[]
-					{
-						MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-						MetadataReference.CreateFromFile(typeof(אArray).Assembly.Location)
-					},
-					new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+					references,
+					new CSharpCompilationOptions(isApp ? OutputKind.ConsoleApplication : OutputKind.DynamicallyLinkedLibrary)
 					);
 
 
@@ -268,9 +289,12 @@ namespace Adamant.Compiler.Cmd
 			{
 				File.Delete(assemblyPath);
 				foreach(var diagnostic in result.Diagnostics)
-				{
 					Console.WriteLine(diagnostic);
-				}
+			}
+			var binDir = Path.GetDirectoryName(assemblyPath);
+			foreach(var reference in references.Skip(1))
+			{
+				File.Copy(reference.FilePath, Path.Combine(binDir, Path.GetFileName(reference.FilePath)));
 			}
 		}
 	}

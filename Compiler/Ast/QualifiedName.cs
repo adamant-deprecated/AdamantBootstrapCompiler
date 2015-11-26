@@ -19,6 +19,12 @@ namespace Adamant.Compiler.Ast
 			return value == null ? new QualifiedName(name) : new QualifiedName(value + "." + name);
 		}
 
+		[Pure]
+		public QualifiedName Prepend(string name)
+		{
+			return value == null ? new QualifiedName(name) : new QualifiedName(name + "." + value);
+		}
+
 		private static string Clean(string name)
 		{
 			return name.Replace("@", "");

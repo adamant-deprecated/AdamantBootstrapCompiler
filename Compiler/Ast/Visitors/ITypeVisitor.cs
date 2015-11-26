@@ -7,5 +7,6 @@ namespace Adamant.Compiler.Ast.Visitors
 		TReturn VisitInferredType(InferredType type, TParam param);
 		TReturn VisitOwnershipType(OwnershipType type, TParam param);
 		TReturn VisitTypeName(TypeName type, TParam param);
+		TReturn VisitArraySliceType(ArraySliceType type, TParam param);
 	}
 }

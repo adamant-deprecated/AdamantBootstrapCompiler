@@ -101,6 +101,11 @@
       <Project>{117e8b92-bf7e-4a66-872f-141664794a1e}</Project>
       <Name>Runtime</Name>
     </ProjectReference>
+    <ProjectReference Include="..\אSystem\אSystem.csproj">
+      <Project>{83fd1cae-9986-4075-8319-8e0e92998b13}</Project>
+      <Name>אSystem</Name>
+      <Aliases>global,אSystem</Aliases>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

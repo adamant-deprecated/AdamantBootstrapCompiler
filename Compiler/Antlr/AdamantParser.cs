@@ -1573,14 +1573,15 @@ public partial class AdamantParser : Parser {
 		}
 	}
 	public partial class ArrayTypeContext : PlainTypeContext {
-		public PlainTypeContext plainType() {
-			return GetRuleContext<PlainTypeContext>(0);
-		}
+		public PlainTypeContext elementType;
 		public ConstExpressionContext[] constExpression() {
 			return GetRuleContexts<ConstExpressionContext>();
 		}
 		public ConstExpressionContext constExpression(int i) {
 			return GetRuleContext<ConstExpressionContext>(i);
+		}
+		public PlainTypeContext plainType() {
+			return GetRuleContext<PlainTypeContext>(0);
 		}
 		public ArrayTypeContext(PlainTypeContext context) { CopyFrom(context); }
 		public override void EnterRule(IParseTreeListener listener) {
@@ -1598,6 +1599,9 @@ public partial class AdamantParser : Parser {
 		}
 	}
 	public partial class ArraySliceTypeContext : PlainTypeContext {
+		public PlainTypeContext elementType;
+		public IToken s68;
+		public IList<IToken> _dimensions = new List<IToken>();
 		public PlainTypeContext plainType() {
 			return GetRuleContext<PlainTypeContext>(0);
 		}
@@ -1658,6 +1662,7 @@ public partial class AdamantParser : Parser {
 		}
 	}
 	public partial class PointerTypeContext : PlainTypeContext {
+		public PlainTypeContext valueType;
 		public PlainTypeContext plainType() {
 			return GetRuleContext<PlainTypeContext>(0);
 		}
@@ -1735,6 +1740,7 @@ public partial class AdamantParser : Parser {
 					case 1:
 						{
 						_localctx = new PointerTypeContext(new PlainTypeContext(_parentctx, _parentState));
+						((PointerTypeContext)_localctx).valueType = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_plainType);
 						State = 304;
 						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
@@ -1744,6 +1750,7 @@ public partial class AdamantParser : Parser {
 					case 2:
 						{
 						_localctx = new ArrayTypeContext(new PlainTypeContext(_parentctx, _parentState));
+						((ArrayTypeContext)_localctx).elementType = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_plainType);
 						State = 306;
 						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
@@ -1769,6 +1776,7 @@ public partial class AdamantParser : Parser {
 					case 3:
 						{
 						_localctx = new ArraySliceTypeContext(new PlainTypeContext(_parentctx, _parentState));
+						((ArraySliceTypeContext)_localctx).elementType = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_plainType);
 						State = 318;
 						if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
@@ -1779,7 +1787,8 @@ public partial class AdamantParser : Parser {
 						while (_la==Comma) {
 							{
 							{
-							State = 320; Match(Comma);
+							State = 320; ((ArraySliceTypeContext)_localctx).s68 = Match(Comma);
+							((ArraySliceTypeContext)_localctx)._dimensions.Add(((ArraySliceTypeContext)_localctx).s68);
 							}
 							}
 							State = 325;
@@ -3005,6 +3014,9 @@ public partial class AdamantParser : Parser {
 	}
 
 	public partial class ParameterContext : ParserRuleContext {
+		public ParameterModifierContext modifiers;
+		public IdentifierContext name;
+		public OwnershipTypeContext type;
 		public OwnershipTypeContext ownershipType() {
 			return GetRuleContext<OwnershipTypeContext>(0);
 		}
@@ -3054,7 +3066,7 @@ public partial class AdamantParser : Parser {
 				while (_la==Params) {
 					{
 					{
-					State = 565; parameterModifier();
+					State = 565; _localctx.modifiers = parameterModifier();
 					}
 					}
 					State = 570;
@@ -3065,12 +3077,12 @@ public partial class AdamantParser : Parser {
 				_la = TokenStream.La(1);
 				if (((((_la - 49)) & ~0x3f) == 0 && ((1L << (_la - 49)) & ((1L << (Conversion - 49)) | (1L << (Identifier - 49)) | (1L << (EscapedIdentifier - 49)))) != 0)) {
 					{
-					State = 571; identifier();
+					State = 571; _localctx.name = identifier();
 					}
 				}
 
 				State = 574; Match(Colon);
-				State = 575; ownershipType();
+				State = 575; _localctx.type = ownershipType();
 				}
 				break;
 			case 2:
@@ -3082,7 +3094,7 @@ public partial class AdamantParser : Parser {
 				while (_la==Params) {
 					{
 					{
-					State = 576; parameterModifier();
+					State = 576; _localctx.modifiers = parameterModifier();
 					}
 					}
 					State = 581;

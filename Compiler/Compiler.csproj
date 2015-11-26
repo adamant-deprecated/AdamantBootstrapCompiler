@@ -30,7 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr4.Runtime">
+    <Reference Include="Antlr4.Runtime, Version=4.5.1.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Antlr4.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -85,6 +86,7 @@
     <Compile Include="Ast\Assemblage.cs" />
     <Compile Include="Ast\Declarations\ClassDeclaration.cs" />
     <Compile Include="Ast\Declaration.cs" />
+    <Compile Include="Ast\Types\ArraySliceType.cs" />
     <Compile Include="Ast\Types\InferredType.cs" />
     <Compile Include="Ast\Visitors\IDeclarationVisitor.cs" />
     <Compile Include="Ast\Members\Method.cs" />
