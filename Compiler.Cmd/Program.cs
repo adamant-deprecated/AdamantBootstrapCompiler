@@ -20,6 +20,8 @@ namespace Adamant.Compiler.Cmd
 {
 	public class Program
 	{
+		private const string ProjectFileName = "forge-project.vson";
+
 		static void Main(string[] args)
 		{
 			var options = ParseOptions(args);
@@ -99,15 +101,15 @@ namespace Adamant.Compiler.Cmd
 
 			if(Path.GetExtension(filePath) == ".vson")
 			{
-				if(Path.GetFileName(filePath) != "project.vson")
+				if(Path.GetFileName(filePath) != ProjectFileName)
 				{
-					Console.WriteLine("project file must be named project.vson");
+					Console.WriteLine($"project file must be named {ProjectFileName}");
 					return null;
 				}
 
 				if(outputPath.Value != null)
 				{
-					Console.WriteLine("When compiling project.vson file don't specify output path");
+					Console.WriteLine($"When compiling {ProjectFileName} file don't specify output path");
 					return null;
 				}
 
