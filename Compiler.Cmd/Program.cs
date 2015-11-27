@@ -234,7 +234,7 @@ namespace Adamant.Compiler.Cmd
 				// TODO generate entry point
 			}
 
-			var binDirPath = Path.Combine(projectDirPath, "bin");
+			var binDirPath = Path.Combine(projectDirPath, "targets/debug");
 			DeleteDirectoryIfExists(binDirPath);
 			var csSrc = new DirectoryInfo(compileDirPath).GetDirectories("src").Single().GetFiles("*.cs", SearchOption.AllDirectories);
 			var assemblyName = Path.GetFileName(projectDirPath);
