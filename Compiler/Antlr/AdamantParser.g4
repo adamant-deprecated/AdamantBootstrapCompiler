@@ -200,12 +200,12 @@ expression
 	| expression op=('+'|'-') expression					#AdditiveExpression
 	| expression (ops+='<' ops+='<' | ops+='>' ops+='>') expression #ShiftExpression
 	| expression op=('<'|'<='|'>'|'>=') expression			#ComparativeExpression
-	| expression op=('=='|'<>') expression					#EqualityExpression
+	| lhs=expression op=('=='|'<>') rhs=expression			#EqualityExpression
 	| expression 'and' expression							#AndExpression
 	| expression 'xor' expression							#XorExpression
 	| expression 'or' expression							#OrExpression
 	| expression '??' expression							#CoalesceExpression
-	| <assoc=right> expression '?' expression ':' expression #IfExpression
+	| <assoc=right> condition=expression '?' then=expression ':' else=expression #IfExpression
 	| <assoc=right> lvalue=expression op=('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') rvalue=expression #AssignmentExpression
 	| identifier											#VariableExpression
 	| 'new' typeName('.' identifier)? '(' argumentList ')'	#NewExpression

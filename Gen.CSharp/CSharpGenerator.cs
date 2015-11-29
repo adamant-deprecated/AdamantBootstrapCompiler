@@ -430,6 +430,29 @@ namespace Adamant.Compiler.Gen.CSharp
 			o.Write("this");
 			return MainFunctions.Empty;
 		}
+
+		public override MainFunctions VisitEqualityExpression(AdamantParser.EqualityExpressionContext context)
+		{
+			context.lhs.Accept(this);
+			var op = context.op.Text;
+			if(op == "<>")
+				op = "!=";
+			o.Write($" {op} ");
+			context.rhs.Accept(this);
+			return MainFunctions.Empty;
+		}
+
+		public override MainFunctions VisitIfExpression(AdamantParser.IfExpressionContext context)
+		{
+			o.Write("(");
+			context.condition.Accept(this);
+			o.Write(" ? ");
+			context.then.Accept(this);
+			o.Write(" : ");
+			context.@else.Accept(this);
+			o.Write(")");
+			return MainFunctions.Empty;
+		}
 		#endregion
 
 		public override MainFunctions VisitVariableDeclaration(AdamantParser.VariableDeclarationContext context)

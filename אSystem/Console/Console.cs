@@ -1,4 +1,5 @@
-﻿using Con = System.Console;
+﻿using א.System.IO;
+using Con = System.Console;
 
 namespace א.System.Console
 {
@@ -8,5 +9,12 @@ namespace א.System.Console
 		{
 			Con.WriteLine(value);
 		}
+
+		public void WriteLine()
+		{
+			Con.WriteLine();
+		}
+
+		public TextWriter Out => new TextWriter(Con.Out);
 	}
 }

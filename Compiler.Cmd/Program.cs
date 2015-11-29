@@ -241,8 +241,7 @@ namespace Adamant.Compiler.Cmd
 			BuildProjects(projectDirPath, projectConfig, builtDependencies, targetDirPath);
 		}
 
-		private static void BuildDependencies(string projectDirPath, ProjectConfig projectConfig,
-			IDictionary<string, Dependency> builtDependencies)
+		private static void BuildDependencies(string projectDirPath, ProjectConfig projectConfig, IDictionary<string, Dependency> builtDependencies)
 		{
 			foreach(var dependency in projectConfig.Dependencies)
 			{
@@ -253,8 +252,7 @@ namespace Adamant.Compiler.Cmd
 			}
 		}
 
-		private static string DependencyPath(string dependencyName, DependencyConfig config, string projectDirPath,
-			IList<string> dependencyPaths)
+		private static string DependencyPath(string dependencyName, DependencyConfig config, string projectDirPath, IList<string> dependencyPaths)
 		{
 			if(!string.IsNullOrEmpty(config.Path))
 			{
@@ -270,8 +268,7 @@ namespace Adamant.Compiler.Cmd
 			throw new Exception("Could not find dependency");
 		}
 
-		private static string BuildProject(string projectDirPath, ProjectConfig projectConfig,
-			IDictionary<string, Dependency> builtDependencies)
+		private static string BuildProject(string projectDirPath, ProjectConfig projectConfig, IDictionary<string, Dependency> builtDependencies)
 		{
 			Console.WriteLine($"Building {projectConfig.Name} ...");
 			var compileDirPath = Path.Combine(projectDirPath, ".bootstrapCompile");
@@ -285,6 +282,8 @@ namespace Adamant.Compiler.Cmd
 				var csPath = Path.ChangeExtension(relPath, "cs");
 				return Compile(srcFile.FullName, Path.Combine(compileDirPath, csPath));
 			}).Combine();
+
+			GenerateAssemblyInfo(projectConfig, compileDirPath);
 
 			if(mainFunctions.Count > 1)
 				throw new Exception("Multiple main functions");
@@ -307,12 +306,11 @@ namespace Adamant.Compiler.Cmd
 			return targetDirPath;
 		}
 
-		private static void CompileCSharp(FileInfo[] sources, IEnumerable<string> dependencyPaths, string assemblyPath,
-			bool isApp)
+		private static void CompileCSharp(FileInfo[] sources, IEnumerable<string> dependencyPaths, string assemblyPath, bool isApp)
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(assemblyPath));
 			EmitResult result;
-			var assemblyFileName = Path.GetFileName(assemblyPath);
+			var assemblyFileName = Path.GetFileNameWithoutExtension(assemblyPath);
 
 			var syntaxTrees =
 				sources.Select(src => CSharpSyntaxTree.ParseText(File.ReadAllText(src.FullName), null, src.FullName)).ToArray();
@@ -329,7 +327,11 @@ namespace Adamant.Compiler.Cmd
 					references,
 					new CSharpCompilationOptions(isApp ? OutputKind.ConsoleApplication : OutputKind.DynamicallyLinkedLibrary)
 					);
-				result = compilation.Emit(stream);
+				// Trick to make version show up in properties dialog
+				using(var win32ResStream = compilation.CreateDefaultWin32Resources(versionResource: true, noManifest: false, manifestContents: null, iconInIcoFormat: null))
+				{
+					result = compilation.Emit(stream, win32Resources: win32ResStream);
+				}
 			}
 			if(!result.Success)
 			{
@@ -359,6 +361,21 @@ namespace Adamant.Compiler.Cmd
 				if(builtDependencies.ContainsKey(projectName)) continue;
 				Forge(Path.Combine(projectDirPath, project.Value, ProjectFileName), builtDependencies);
 				// TODO copy into target
+			}
+		}
+
+		private static void GenerateAssemblyInfo(ProjectConfig projectConfig, string compileDirPath)
+		{
+			using(var file = File.CreateText(Path.Combine(compileDirPath, "src/אAssemblyInfo.cs")))
+			{
+				var version = projectConfig.Version;
+				if(version.Contains("-"))
+					version = version.Substring(0, version.IndexOf("-", StringComparison.Ordinal));
+				file.WriteLine("using System.Reflection;");
+				file.WriteLine();
+				file.WriteLine($"[assembly: AssemblyTitle(\"{projectConfig.Name}\")]");
+				file.WriteLine($"[assembly: AssemblyVersion(\"{version}.0\")]");
+				file.WriteLine($"[assembly: AssemblyFileVersion(\"{version}.0\")]");
 			}
 		}
 

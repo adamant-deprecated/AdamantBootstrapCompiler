@@ -1,8 +1,8 @@
 ﻿namespace אRuntime
 {
-	public class Maybe<T>
+	public struct Maybe<T>
 	{
-		private T value;
+		private readonly T value;
 
 		private Maybe(T value)
 		{
@@ -12,6 +12,16 @@
 		public static implicit operator Maybe<T>(T value)
 		{
 			return new Maybe<T>(value);
+		}
+
+		public static bool operator ==(Maybe<T> left, Maybe<T> right)
+		{
+			return Equals(left.value, right.value);
+		}
+
+		public static bool operator !=(Maybe<T> left, Maybe<T> right)
+		{
+			return !(left == right);
 		}
 	}
 }

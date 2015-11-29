@@ -4298,7 +4298,9 @@ public partial class AdamantParser : Parser {
 		}
 	}
 	public partial class EqualityExpressionContext : ExpressionContext {
+		public ExpressionContext lhs;
 		public IToken op;
+		public ExpressionContext rhs;
 		public ExpressionContext[] expression() {
 			return GetRuleContexts<ExpressionContext>();
 		}
@@ -4405,6 +4407,9 @@ public partial class AdamantParser : Parser {
 		}
 	}
 	public partial class IfExpressionContext : ExpressionContext {
+		public ExpressionContext condition;
+		public ExpressionContext then;
+		public ExpressionContext @else;
 		public ExpressionContext[] expression() {
 			return GetRuleContexts<ExpressionContext>();
 		}
@@ -4871,6 +4876,7 @@ public partial class AdamantParser : Parser {
 					case 5:
 						{
 						_localctx = new EqualityExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((EqualityExpressionContext)_localctx).lhs = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 777;
 						if (!(Precpred(Context, 16))) throw new FailedPredicateException(this, "Precpred(Context, 16)");
@@ -4883,7 +4889,7 @@ public partial class AdamantParser : Parser {
 						else {
 						    Consume();
 						}
-						State = 779; expression(17);
+						State = 779; ((EqualityExpressionContext)_localctx).rhs = expression(17);
 						}
 						break;
 					case 6:
@@ -4929,13 +4935,14 @@ public partial class AdamantParser : Parser {
 					case 10:
 						{
 						_localctx = new IfExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((IfExpressionContext)_localctx).condition = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 792;
 						if (!(Precpred(Context, 11))) throw new FailedPredicateException(this, "Precpred(Context, 11)");
 						State = 793; Match(IsNull);
-						State = 794; expression(0);
+						State = 794; ((IfExpressionContext)_localctx).then = expression(0);
 						State = 795; Match(Colon);
-						State = 796; expression(11);
+						State = 796; ((IfExpressionContext)_localctx).@else = expression(11);
 						}
 						break;
 					case 11:
