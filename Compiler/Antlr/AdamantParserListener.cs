@@ -284,6 +284,18 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFunctionType([NotNull] AdamantParser.FunctionTypeContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>MaybeType</c>
+	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterMaybeType([NotNull] AdamantParser.MaybeTypeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>MaybeType</c>
+	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitMaybeType([NotNull] AdamantParser.MaybeTypeContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>PointerType</c>
 	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
 	/// </summary>
@@ -550,17 +562,17 @@ public interface IAdamantParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitUnsafeBlockStatement([NotNull] AdamantParser.UnsafeBlockStatementContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>Block</c>
+	/// Enter a parse tree produced by the <c>BlockStatement</c>
 	/// labeled alternative in <see cref="AdamantParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterBlock([NotNull] AdamantParser.BlockContext context);
+	void EnterBlockStatement([NotNull] AdamantParser.BlockStatementContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>Block</c>
+	/// Exit a parse tree produced by the <c>BlockStatement</c>
 	/// labeled alternative in <see cref="AdamantParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitBlock([NotNull] AdamantParser.BlockContext context);
+	void ExitBlockStatement([NotNull] AdamantParser.BlockStatementContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>EmptyStatement</c>
 	/// labeled alternative in <see cref="AdamantParser.statement"/>.

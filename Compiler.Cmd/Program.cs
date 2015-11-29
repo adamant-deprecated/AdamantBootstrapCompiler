@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using Adamant.Compiler.Analysis;
 using Adamant.Compiler.Antlr;
 using Adamant.Compiler.Ast;
+using Adamant.Compiler.Cmd.Config;
 using Adamant.Compiler.Cmd.Options;
 using Adamant.Compiler.Gen.CSharp;
 using Antlr4.Runtime;
@@ -14,7 +18,6 @@ using Microsoft.CodeAnalysis.Emit;
 using NDesk.Options;
 using NDesk.Options.Extensions;
 using Newtonsoft.Json;
-using אRuntime;
 
 namespace Adamant.Compiler.Cmd
 {
@@ -22,7 +25,7 @@ namespace Adamant.Compiler.Cmd
 	{
 		private const string ProjectFileName = "forge-project.vson";
 
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			var options = ParseOptions(args);
 			if(options == null) return;
@@ -98,6 +101,8 @@ namespace Adamant.Compiler.Cmd
 			}
 
 			// Some form of compile
+			if(Directory.Exists(filePath)) // directory path
+				filePath = Path.Combine(filePath, ProjectFileName);
 
 			if(Path.GetExtension(filePath) == ".vson")
 			{
@@ -155,12 +160,15 @@ namespace Adamant.Compiler.Cmd
 		private static string Format(IToken token)
 		{
 			var channel = token.Channel > 0 ? ",channel=" + ChannelNames[token.Channel] : "";
-			var text = token.Text != null ? "'" + token.Text.Replace("\n", "\\n").Replace("\r", "\\r").Replace("\n", "\\t") + "'" : "<no text>";
+			var text = token.Text != null
+				? "'" + token.Text.Replace("\n", "\\n").Replace("\r", "\\r").Replace("\n", "\\t") + "'"
+				: "<no text>";
 			var type = AdamantLexer.DefaultVocabulary.GetSymbolicName(token.Type);
 			return text + ":" + type + channel + " @" + token.Line + ":" + token.Column;
 		}
 
 		private static readonly string[] ChannelNames = { "DEFAULT", "1", "DocComments" };
+		private static readonly string[] CoreDependencies = new[] { "Adamant.Compiler.Runtime", "Adamant.Compiler.System" };
 
 		private static void PrintTree(string codePath, string outputPath)
 		{
@@ -176,7 +184,7 @@ namespace Adamant.Compiler.Cmd
 			output.WriteLine(tree.ToStringTree(parser));
 		}
 
-		private static GenMetaData Compile(string codePath, string outputPath)
+		private static MainFunctions Compile(string codePath, string outputPath)
 		{
 			if(outputPath != null)
 			{
@@ -188,7 +196,7 @@ namespace Adamant.Compiler.Cmd
 				return Compile(codePath, Console.Out);
 		}
 
-		private static GenMetaData Compile(string codePath, TextWriter output)
+		private static MainFunctions Compile(string codePath, TextWriter output)
 		{
 			var stream = new AntlrFileStream(codePath);
 			var lexer = new AdamantLexer(stream);
@@ -207,75 +215,113 @@ namespace Adamant.Compiler.Cmd
 
 		private static void Forge(string projectFilePath)
 		{
-			var project = JsonConvert.DeserializeObject<Project>(File.ReadAllText(projectFilePath));
+			try
+			{
+				var builtDependencies = new Dictionary<string, Dependency>()
+				{
+					{"Adamant.Compiler.Runtime", new Dependency(typeof(אRuntime.אArray).Assembly.Location)},
+					{"Adamant.Compiler.System", new Dependency(typeof(א.System.Console.Console).Assembly.Location)},
+				};
+				Forge(projectFilePath, builtDependencies);
+			}
+			catch(BuildFailedException)
+			{
+				Console.WriteLine("Build Failed, stopping");
+			}
+		}
+
+		private static void Forge(string projectFilePath, IDictionary<string, Dependency> builtDependencies)
+		{
 			var projectDirPath = Path.GetFullPath(Path.GetDirectoryName(projectFilePath));
+			var projectConfig = JsonConvert.DeserializeObject<ProjectConfig>(File.ReadAllText(projectFilePath));
+			projectConfig.Name = projectConfig.Name ?? Path.GetFileName(projectDirPath);
+
+			BuildDependencies(projectDirPath, projectConfig, builtDependencies);
+			var targetDirPath = BuildProject(projectDirPath, projectConfig, builtDependencies);
+			BuildProjects(projectDirPath, projectConfig, builtDependencies, targetDirPath);
+		}
+
+		private static void BuildDependencies(string projectDirPath, ProjectConfig projectConfig,
+			IDictionary<string, Dependency> builtDependencies)
+		{
+			foreach(var dependency in projectConfig.Dependencies)
+			{
+				var dependencyName = dependency.Key;
+				if(builtDependencies.ContainsKey(dependencyName)) continue;
+				var path = DependencyPath(dependencyName, dependency.Value, projectDirPath, projectConfig.DependencyPaths);
+				Forge(Path.Combine(path, ProjectFileName), builtDependencies);
+			}
+		}
+
+		private static string DependencyPath(string dependencyName, DependencyConfig config, string projectDirPath,
+			IList<string> dependencyPaths)
+		{
+			if(!string.IsNullOrEmpty(config.Path))
+			{
+				return Path.Combine(projectDirPath, config.Path);
+			}
+
+			foreach(var dependencyPath in dependencyPaths)
+			{
+				var tryPath = Path.Combine(projectDirPath, dependencyPath, dependencyName);
+				if(Directory.Exists(tryPath))
+					return tryPath;
+			}
+			throw new Exception("Could not find dependency");
+		}
+
+		private static string BuildProject(string projectDirPath, ProjectConfig projectConfig,
+			IDictionary<string, Dependency> builtDependencies)
+		{
+			Console.WriteLine($"Building {projectConfig.Name} ...");
 			var compileDirPath = Path.Combine(projectDirPath, ".bootstrapCompile");
 			DeleteDirectoryIfExists(compileDirPath);
 
 			var srcFiles = new DirectoryInfo(Path.Combine(projectDirPath, "src")).GetFiles("*.adam", SearchOption.AllDirectories);
 
-			var metaData = srcFiles.Select(srcFile =>
+			var mainFunctions = srcFiles.Select(srcFile =>
 			{
 				var relPath = Path.GetFullPath(srcFile.FullName).Substring(projectDirPath.Length + 1);
 				var csPath = Path.ChangeExtension(relPath, "cs");
 				return Compile(srcFile.FullName, Path.Combine(compileDirPath, csPath));
 			}).Combine();
 
-			var mainFunctions = metaData.MainFunctions.ToList();
 			if(mainFunctions.Count > 1)
 				throw new Exception("Multiple main functions");
 
 			if(mainFunctions.Count == 1)
 				GenerateEntryPoint(compileDirPath, mainFunctions.Single());
 
-			var isApp = project.Template == "app";
-			if(isApp)
-			{
-				// TODO generate entry point
-			}
-
-			var binDirPath = Path.Combine(projectDirPath, "targets/debug");
-			DeleteDirectoryIfExists(binDirPath);
-			var csSrc = new DirectoryInfo(compileDirPath).GetDirectories("src").Single().GetFiles("*.cs", SearchOption.AllDirectories);
-			var assemblyName = Path.GetFileName(projectDirPath);
-			var assemblyPath = Path.Combine(binDirPath, assemblyName);
-			CompileCSharp(csSrc, assemblyPath, isApp);
+			var isApp = projectConfig.Template == "app";
+			var targetDirPath = Path.Combine(projectDirPath, "targets/debug");
+			DeleteDirectoryIfExists(targetDirPath);
+			var csSrc = new DirectoryInfo(compileDirPath).GetDirectories("src")
+				.Single()
+				.GetFiles("*.cs", SearchOption.AllDirectories);
+			var assemblyName = projectConfig.Name;
+			var assemblyPath = Path.Combine(targetDirPath, assemblyName) + (isApp ? ".exe" : ".dll");
+			var dependencies = projectConfig.Dependencies.Keys.Concat(CoreDependencies).ToList();
+			var dependencyPaths = dependencies.Select(d => builtDependencies[d].OutputPath);
+			CompileCSharp(csSrc, dependencyPaths, assemblyPath, isApp);
+			builtDependencies.Add(projectConfig.Name, new Dependency(assemblyPath, dependencies));
+			return targetDirPath;
 		}
 
-		private static void GenerateEntryPoint(string compileDirPath, QualifiedName mainFunction)
+		private static void CompileCSharp(FileInfo[] sources, IEnumerable<string> dependencyPaths, string assemblyPath,
+			bool isApp)
 		{
-			using(var file = File.CreateText(Path.Combine(compileDirPath, "src/אEntryPoint.cs")))
-			{
-				file.WriteLine("public class אEntryPoint");
-				file.WriteLine("{");
-				file.WriteLine("	public static void Main(string[] args)");
-				file.WriteLine("	{");
-				file.WriteLine($"		{ mainFunction}(new א.System.Console.Console(), args);");
-				file.WriteLine("	}");
-				file.WriteLine("}");
-			}
-		}
-
-		private static void DeleteDirectoryIfExists(string path)
-		{
-			if(Directory.Exists(path))
-				Directory.Delete(path, true);
-		}
-
-		private static void CompileCSharp(FileInfo[] sources, string assemblyPath, bool isApp)
-		{
-			assemblyPath = Path.ChangeExtension(assemblyPath, isApp ? "exe" : "dll");
 			Directory.CreateDirectory(Path.GetDirectoryName(assemblyPath));
 			EmitResult result;
 			var assemblyFileName = Path.GetFileName(assemblyPath);
 
-			var syntaxTrees = sources.Select(src => CSharpSyntaxTree.ParseText(File.ReadAllText(src.FullName))).ToArray();
-			var references = new[]
+			var syntaxTrees =
+				sources.Select(src => CSharpSyntaxTree.ParseText(File.ReadAllText(src.FullName), null, src.FullName)).ToArray();
+			var references = new List<PortableExecutableReference>()
 			{
 				MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-				MetadataReference.CreateFromFile(typeof(אArray).Assembly.Location),
-				MetadataReference.CreateFromFile(typeof(א.System.Console.Console).Assembly.Location),
+				MetadataReference.CreateFromFile(typeof(DynamicAttribute).Assembly.Location),
 			};
+			references.AddRange(dependencyPaths.Select(p => MetadataReference.CreateFromFile(p)));
 			using(var stream = File.Create(assemblyPath))
 			{
 				var compilation = CSharpCompilation.Create(assemblyFileName,
@@ -283,20 +329,76 @@ namespace Adamant.Compiler.Cmd
 					references,
 					new CSharpCompilationOptions(isApp ? OutputKind.ConsoleApplication : OutputKind.DynamicallyLinkedLibrary)
 					);
-
-
 				result = compilation.Emit(stream);
 			}
 			if(!result.Success)
 			{
 				File.Delete(assemblyPath);
-				foreach(var diagnostic in result.Diagnostics)
-					Console.WriteLine(diagnostic);
+				foreach(var group in result.Diagnostics.GroupBy(d => d.Location.SourceTree.FilePath))
+				{
+					Console.WriteLine($"In {group.Key}");
+					foreach(var diagnostic in group)
+					{
+						Console.WriteLine(diagnostic);
+					}
+				}
+				throw new BuildFailedException();
 			}
 			var binDir = Path.GetDirectoryName(assemblyPath);
-			foreach(var reference in references.Skip(1))
-			{
+			foreach(var reference in references.Skip(2))
 				File.Copy(reference.FilePath, Path.Combine(binDir, Path.GetFileName(reference.FilePath)));
+		}
+
+		private static void BuildProjects(string projectDirPath, ProjectConfig projectConfig,
+			IDictionary<string, Dependency> builtDependencies, string targetDirPath)
+		{
+			// Build Projects that weren't already built as dependencies
+			foreach(var project in projectConfig.Projects)
+			{
+				var projectName = project.Key;
+				if(builtDependencies.ContainsKey(projectName)) continue;
+				Forge(Path.Combine(projectDirPath, project.Value, ProjectFileName), builtDependencies);
+				// TODO copy into target
+			}
+		}
+
+		private static void GenerateEntryPoint(string compileDirPath, MainFunction mainFunction)
+		{
+			using(var file = File.CreateText(Path.Combine(compileDirPath, "src/אEntryPoint.cs")))
+			{
+				var returns = mainFunction.ReturnType != "void";
+				var returnType = returns ? "int" : "void";
+				var returnStatement = returns ? "return " : "";
+
+				file.WriteLine("public class אEntryPoint");
+				file.WriteLine("{");
+				file.WriteLine($"	public static {returnType} Main(string[] args)");
+				file.WriteLine("	{");
+				file.WriteLine($"		{returnStatement}{mainFunction.Name}(new א.System.Console.Console(), args);");
+				file.WriteLine("	}");
+				file.WriteLine("}");
+			}
+		}
+
+		private static void DeleteDirectoryIfExists(string path)
+		{
+			for(var i = 0; i < 3; i++)
+			{
+				try
+				{
+					if(Directory.Exists(path))
+					{
+						Directory.Delete(path, true);
+						// Having problems with creating dir immediately after deleting
+						while(Directory.Exists(path))
+							Thread.Sleep(1);
+					}
+					return; // if no error, don't return
+				}
+				catch(IOException)
+				{
+					// Ignore, we want to retry
+				}
 			}
 		}
 	}

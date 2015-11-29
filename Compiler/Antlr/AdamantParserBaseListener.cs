@@ -310,6 +310,18 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFunctionType([NotNull] AdamantParser.FunctionTypeContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AdamantParser.MaybeType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMaybeType([NotNull] AdamantParser.MaybeTypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AdamantParser.MaybeType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMaybeType([NotNull] AdamantParser.MaybeTypeContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.PointerType"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -598,17 +610,17 @@ public partial class AdamantParserBaseListener : IAdamantParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitUnsafeBlockStatement([NotNull] AdamantParser.UnsafeBlockStatementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AdamantParser.Block"/>.
+	/// Enter a parse tree produced by <see cref="AdamantParser.BlockStatement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBlock([NotNull] AdamantParser.BlockContext context) { }
+	public virtual void EnterBlockStatement([NotNull] AdamantParser.BlockStatementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AdamantParser.Block"/>.
+	/// Exit a parse tree produced by <see cref="AdamantParser.BlockStatement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBlock([NotNull] AdamantParser.BlockContext context) { }
+	public virtual void ExitBlockStatement([NotNull] AdamantParser.BlockStatementContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AdamantParser.EmptyStatement"/>.
 	/// <para>The default implementation does nothing.</para>

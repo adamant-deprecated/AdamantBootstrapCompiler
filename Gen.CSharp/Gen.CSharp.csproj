@@ -46,8 +46,10 @@
   <ItemGroup>
     <Compile Include="CSharpGenerator.cs" />
     <Compile Include="CSharpGenerator.old.cs" />
-    <Compile Include="GenMetaData.cs" />
-    <Compile Include="GenMetaDataExtensions.cs" />
+    <Compile Include="CSharpWriter.cs" />
+    <Compile Include="MainFunction.cs" />
+    <Compile Include="MainFunctions.cs" />
+    <Compile Include="MainFunctionsExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

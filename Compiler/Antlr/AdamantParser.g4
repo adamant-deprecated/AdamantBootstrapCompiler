@@ -66,7 +66,7 @@ typeParameterList
 	;
 
 typeParameter
-	: identifier '...'? (':' typeName)?
+	: name=identifier isList='...'? (':' baseType=typeName)?
 	;
 
 typeName
@@ -87,6 +87,7 @@ ownershipType // these are types with ownership modifiers
 
 plainType
 	: typeName																#NamedType
+	| typeName '?'															#MaybeType
 	| valueType=plainType '*'												#PointerType
 	| elementType=plainType '[' constExpression (',' constExpression)* ']'	#ArrayType
 	| elementType=plainType '[' dimensions+=','* ']'						#ArraySliceType
@@ -120,13 +121,13 @@ typeParameterConstraint
 	;
 
 member
-	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody													#Constructor
-	| attribute* modifier* 'delete' parameterList methodBody																					#Destructor
+	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody														#Constructor
+	| attribute* modifier* 'delete' parameterList methodBody																						#Destructor
 	| attribute* modifier* 'conversion' typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody					#ConversionMethod
 	| attribute* modifier* 'operator' overloadableOperator parameterList '=>' ownershipType methodBody												#OperatorOverloadMethod
 	| attribute* modifier* kind=('var'|'let') identifier (':' ownershipType)? ('=' expression)? ';'													#Field
 	| attribute* modifier* kind=('get'|'set') identifier typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody	#Property
-	| attribute* modifier* identifier typeArguments? parameterList '=>' returnType=ownershipType typeParameterConstraintClause* methodBody						#Method
+	| attribute* modifier* name=identifier typeArguments? parameterList '=>' returnType=ownershipType typeParameterConstraintClause* methodBody		#Method
 	;
 
 parameterList
@@ -135,8 +136,8 @@ parameterList
 	;
 
 parameter
-	: modifiers=parameterModifier* name=identifier? ':' type=ownershipType
-	| modifiers=parameterModifier* 'this' (':' 'mut')?
+	: modifiers+=parameterModifier* name=identifier? ':' type=ownershipType
+	| modifiers+=parameterModifier* 'this' (':' 'mut')?
 	;
 
 parameterModifier
@@ -173,12 +174,12 @@ overloadableOperator
 statement
 	: variableDeclaration ';'								#VariableDeclarationStatement
 	| 'unsafe' '{' statement* '}'							#UnsafeBlockStatement
-	| '{' statement* '}'									#Block
+	| '{' statement* '}'									#BlockStatement
 	| ';'													#EmptyStatement
 	| expression ';'										#ExpressionStatement
 	| 'return' expression ';'								#ReturnStatement
 	| 'throw' expression ';'								#ThrowStatement
-	| 'if' '(' expression ')' statement ('else' statement)?	#IfStatement
+	| 'if' '(' condition=expression ')' then=statement ('else' else=statement)?			#IfStatement
 	| 'for' '(' variableDeclaration? ';' expression? ';' expression? ')' statement		#ForStatement
 	| 'foreach' '(' variableDeclaration 'in' expression ')' statement					#ForeachStatement
 	| 'delete' expression ';'								#DeleteStatement
@@ -205,7 +206,7 @@ expression
 	| expression 'or' expression							#OrExpression
 	| expression '??' expression							#CoalesceExpression
 	| <assoc=right> expression '?' expression ':' expression #IfExpression
-	| <assoc=right> expression op=('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') expression #AssignmentExpression
+	| <assoc=right> lvalue=expression op=('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') rvalue=expression #AssignmentExpression
 	| identifier											#VariableExpression
 	| 'new' typeName('.' identifier)? '(' argumentList ')'	#NewExpression
 	| 'new' baseTypes? '(' argumentList ')' '{' member* '}'	#NewObjectExpression

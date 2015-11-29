@@ -74,10 +74,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildFailedException.cs" />
+    <Compile Include="Config\DependencyConfig.cs" />
+    <Compile Include="Dependency.cs" />
     <Compile Include="Options\CmdAction.cs" />
     <Compile Include="Options\CmdOptions.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Project.cs" />
+    <Compile Include="Config\ProjectConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

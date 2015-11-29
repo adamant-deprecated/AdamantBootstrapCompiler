@@ -181,6 +181,13 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFunctionType([NotNull] AdamantParser.FunctionTypeContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>MaybeType</c>
+	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMaybeType([NotNull] AdamantParser.MaybeTypeContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>PointerType</c>
 	/// labeled alternative in <see cref="AdamantParser.plainType"/>.
 	/// </summary>
@@ -338,12 +345,12 @@ public interface IAdamantParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitUnsafeBlockStatement([NotNull] AdamantParser.UnsafeBlockStatementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>Block</c>
+	/// Visit a parse tree produced by the <c>BlockStatement</c>
 	/// labeled alternative in <see cref="AdamantParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBlock([NotNull] AdamantParser.BlockContext context);
+	Result VisitBlockStatement([NotNull] AdamantParser.BlockStatementContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>EmptyStatement</c>
 	/// labeled alternative in <see cref="AdamantParser.statement"/>.
