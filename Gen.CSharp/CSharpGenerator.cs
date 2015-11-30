@@ -2,37 +2,39 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Adamant.Compiler.Antlr;
-using Adamant.Compiler.Ast;
-using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
 namespace Adamant.Compiler.Gen.CSharp
 {
 	public class CSharpGenerator : AdamantParserBaseVisitor<MainFunctions>
 	{
-		private readonly CSharpWriter o;
-		private readonly string currentClassName;
+		protected readonly CSharpWriter O;
+		protected readonly string CurrentClassName;
 
 		public CSharpGenerator(TextWriter output)
 		{
-			o = new CSharpWriter(output);
+			O = new CSharpWriter(output);
 		}
 
-		private CSharpGenerator(CSharpWriter writer, string currentClassName)
+		protected CSharpGenerator(CSharpWriter writer)
+			: this(writer, null)
 		{
-			o = writer;
-			this.currentClassName = currentClassName;
+		}
+
+		protected CSharpGenerator(CSharpWriter writer, string currentClassName)
+		{
+			O = writer;
+			CurrentClassName = currentClassName;
 		}
 
 		#region Formatting
-		private static string Format(IEnumerable<AdamantParser.ModifierContext> modifiers)
+		protected static string Format(IEnumerable<AdamantParser.ModifierContext> modifiers)
 		{
 			return string.Concat(modifiers.Select(Format));
 		}
 
-		private static string Format(AdamantParser.ModifierContext modifier)
+		protected static string Format(AdamantParser.ModifierContext modifier)
 		{
 			var text = modifier.GetText();
 			switch(text)
@@ -44,21 +46,35 @@ namespace Adamant.Compiler.Gen.CSharp
 			}
 		}
 
-		private static string Format(IEnumerable<AdamantParser.ParameterModifierContext> modifiers)
+		protected static string Format(IEnumerable<AdamantParser.ParameterModifierContext> modifiers)
 		{
 			return string.Concat(modifiers.Select(Format));
 		}
 
-		private static string Format(AdamantParser.ParameterModifierContext modifier)
+		protected static string Format(AdamantParser.ParameterModifierContext modifier)
 		{
 			return modifier.GetText() + " ";
 		}
 		#endregion
 
 		#region Inspection
-		private static bool IsAbstract(AdamantParser.ModifierContext[] modifiers)
+		protected static bool IsAbstract(AdamantParser.ModifierContext[] modifiers)
 		{
 			return modifiers.Any(modifier => modifier.Symbol.Type == AdamantLexer.Abstract);
+		}
+
+		protected static bool IsAccessModifier(AdamantParser.ModifierContext modifier)
+		{
+			switch(modifier.Symbol.Type)
+			{
+				case AdamantLexer.Public:
+				case AdamantLexer.Private:
+				case AdamantLexer.Protected:
+				case AdamantLexer.Package:
+					return true;
+				default:
+					return false;
+			}
 		}
 		#endregion
 
@@ -86,69 +102,73 @@ namespace Adamant.Compiler.Gen.CSharp
 
 		public override MainFunctions VisitCompilationUnit(AdamantParser.CompilationUnitContext context)
 		{
-			o.WriteIndentedLine("using אRuntime;");
-			o.BlankLine();
-			o.WriteIndentedLine("namespace א");
-			o.BeginBlock();
+			O.WriteIndentedLine("using אRuntime;");
+			O.BlankLine();
+			O.WriteIndentedLine("namespace א");
+			O.BeginBlock();
+			context.Accept(new ConstructorNameGenerator(O));
 			context.usingStatement().Select(u => u.Accept(this)).Combine();
 			var metaData = context.declaration().Select(d => d.Accept(this)).Combine();
-			o.EndBlock();
+			O.EndBlock();
 			return metaData.InNamespace("א");
 		}
 
 		public override MainFunctions VisitUsingStatement(AdamantParser.UsingStatementContext context)
 		{
-			o.WriteIndentedLine($"using א.{context.namespaceName().GetText()};");
+			O.WriteIndentedLine($"using א.{context.namespaceName().GetText()};");
 			return MainFunctions.Empty;
 		}
 
 		#region Declarations
 		public override MainFunctions VisitClassDeclaration(AdamantParser.ClassDeclarationContext context)
 		{
-			o.BlankLine();
 			var className = context.name.GetText();
-			o.WriteIndented(Format(context.modifier()) + "class " + className);
+			context.Accept(new ConstructorGenerator(O, className));
+			O.BlankLine();
+			O.WriteIndented(Format(context.modifier()) + "partial class " + className);
 			context.typeParameterList()?.Accept(this);
 			context.baseTypes()?.Accept(this);
-			o.WriteLine();
-			o.BeginBlock();
-			var classGenerator = new CSharpGenerator(o, className);
+			O.WriteLine();
+			O.BeginBlock();
+			var classGenerator = new CSharpGenerator(O, className);
 			context.member().Select(m => m.Accept(classGenerator)).Combine();
-			o.EndBlock();
+			O.EndBlock();
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitNamespaceDeclaration(AdamantParser.NamespaceDeclarationContext context)
 		{
-			o.BlankLine();
+			O.BlankLine();
 			var namespaceName = context.namespaceName().GetText();
-			o.WriteIndentedLine("namespace " + namespaceName);
-			o.BeginBlock();
+			O.WriteIndentedLine("namespace " + namespaceName);
+			O.BeginBlock();
 			context.usingStatement().Select(u => u.Accept(this)).Combine();
 			var metaData = context.declaration().Select(d => d.Accept(this)).Combine();
-			o.EndBlock();
+			O.EndBlock();
 			return metaData.InNamespace(namespaceName);
 		}
 
 		public override MainFunctions VisitFunctionDeclaration(AdamantParser.FunctionDeclarationContext context)
 		{
 			// Container static class
-			o.BlankLine();
-			o.WriteIndentedLine("public static partial class אFuncs");
-			o.BeginBlock();
+			O.BlankLine();
+			O.WriteIndentedLine("public static partial class אFuncs");
+			O.BeginBlock();
 			// Declaration
-			o.WriteIndented(Format(context.modifier()) + "static ");
+			O.WriteIndented(Format(context.modifier()) + "static ");
 			context.returnType.Accept(this);
 			var functionName = context.name.GetText();
-			o.Write(" " + functionName + "(");
-			o.WriteList(context.parameterList()._parameters, this);
-			o.WriteLine(")");
+			O.Write(" " + functionName + "(");
+			O.WriteList(context.parameterList()._parameters, this);
+			O.WriteLine(")");
 			// Body
-			o.BeginBlock();
+			O.BeginBlock();
 			context.methodBody().statement().Select(s => s.Accept(this)).Combine();
-			o.EndBlock();
+			if(context.returnType.GetText() == "void")
+				O.WriteIndentedLine("return default(אVoid);");
+			O.EndBlock();
 			// End Container class
-			o.EndBlock();
+			O.EndBlock();
 			return functionName == "Main" ? new MainFunctions("אFuncs.Main", context.returnType.GetText()) : MainFunctions.Empty;
 		}
 		#endregion
@@ -170,9 +190,18 @@ namespace Adamant.Compiler.Gen.CSharp
 			if(context.outerType != null)
 			{
 				context.outerType.Accept(this);
-				o.Write(".");
+				O.Write(".");
 			}
-			o.Write(name == "self" ? "dynamic" : name);
+			switch(name)
+			{
+				case "self":
+					name = "dynamic";
+					break;
+				case "void":
+					name = "אVoid";
+					break;
+			}
+			O.Write(name);
 			context.typeArguments()?.Accept(this);
 			return MainFunctions.Empty;
 		}
@@ -185,17 +214,17 @@ namespace Adamant.Compiler.Gen.CSharp
 		public override MainFunctions VisitArraySliceType(AdamantParser.ArraySliceTypeContext context)
 		{
 			context.elementType.Accept(this);
-			o.Write("[");
-			o.Write(string.Join("", context._dimensions.Select(d => d.Text)));
-			o.Write("]");
+			O.Write("[");
+			O.Write(string.Join("", context._dimensions.Select(d => d.Text)));
+			O.Write("]");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitMaybeType(AdamantParser.MaybeTypeContext context)
 		{
-			o.Write("Maybe<");
+			O.Write("Maybe<");
 			context.typeName().Accept(this);
-			o.Write(">");
+			O.Write(">");
 			return MainFunctions.Empty;
 		}
 
@@ -208,59 +237,68 @@ namespace Adamant.Compiler.Gen.CSharp
 		#region Members
 		public override MainFunctions VisitMethod(AdamantParser.MethodContext context)
 		{
-			o.BlankLine();
+			O.BlankLine();
 			// Declaration
-			o.WriteIndented(Format(context.modifier()) + " ");
+			O.WriteIndented(Format(context.modifier()));
 			context.returnType.Accept(this);
 			var functionName = context.name.GetText();
-			o.Write(" " + functionName);
+			O.Write(" " + functionName);
 			context.typeArguments()?.Accept(this);
-			o.Write("(");
-			o.WriteList(context.parameterList()._parameters, this);
-			o.Write(")");
+			O.Write("(");
+			O.WriteList(context.parameterList()._parameters, this);
+			O.Write(")");
 			if(!IsAbstract(context.modifier()))
 			{
-				o.WriteLine();
+				O.WriteLine();
 				// Body
-				o.BeginBlock();
+				O.BeginBlock();
 				context.methodBody().statement().Select(s => s.Accept(this)).Combine();
-				o.EndBlock();
+				if(context.returnType.GetText() == "void")
+					O.WriteIndentedLine("return default(אVoid);");
+				O.EndBlock();
 			}
 			else
-				o.WriteLine(";");
+				O.WriteLine(";");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitField(AdamantParser.FieldContext context)
 		{
-			o.BlankLine();
-			o.WriteIndented(Format(context.modifier()));
+			O.BlankLine();
+			O.WriteIndented(Format(context.modifier()));
 			context.ownershipType().Accept(this);
-			o.Write(" ");
-			o.Write(context.identifier().GetText());
+			O.Write(" ");
+			O.Write(context.identifier().GetText());
 			if(context.expression() != null)
 			{
-				o.Write(" = ");
+				O.Write(" = ");
 				context.expression().Accept(this);
 			}
-			o.WriteLine(";");
+			O.WriteLine(";");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitConstructor(AdamantParser.ConstructorContext context)
 		{
-			o.BlankLine();
+			O.BlankLine();
 			// Declaration
-			o.WriteIndented(Format(context.modifier()));
-			o.Write(currentClassName);
-			o.Write("(");
-			o.WriteList(context.parameterList()._parameters, this);
-			o.Write(")");
-			o.WriteLine();
+			O.WriteIndented(Format(context.modifier()));
+			O.Write(CurrentClassName);
+			O.Write("(");
+			var constructorName = context.name?.GetText();
+			if(constructorName != null)
+			{
+				O.Write("אCtorName_");
+				O.Write(constructorName);
+				O.Write(" אctorName, ");
+			}
+			O.WriteList(context.parameterList()._parameters, this);
+			O.Write(")");
+			O.WriteLine();
 			// Body
-			o.BeginBlock();
+			O.BeginBlock();
 			context.methodBody().statement().Select(s => s.Accept(this)).Combine();
-			o.EndBlock();
+			O.EndBlock();
 			return MainFunctions.Empty;
 		}
 		#endregion
@@ -268,45 +306,45 @@ namespace Adamant.Compiler.Gen.CSharp
 		#region Statements
 		public override MainFunctions VisitExpressionStatement(AdamantParser.ExpressionStatementContext context)
 		{
-			o.WriteIndent();
+			O.WriteIndent();
 			context.expression().Accept(this);
-			o.WriteLine(";");
+			O.WriteLine(";");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitBlockStatement(AdamantParser.BlockStatementContext context)
 		{
-			o.BeginBlock();
+			O.BeginBlock();
 			context.statement().Select(s => s.Accept(this)).Combine();
-			o.EndBlock();
+			O.EndBlock();
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitReturnStatement(AdamantParser.ReturnStatementContext context)
 		{
-			o.WriteIndented("return ");
+			O.WriteIndented("return ");
 			context.expression().Accept(this);
-			o.WriteLine(";");
+			O.WriteLine(";");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitVariableDeclarationStatement(AdamantParser.VariableDeclarationStatementContext context)
 		{
-			o.WriteIndent();
+			O.WriteIndent();
 			context.variableDeclaration().Accept(this);
-			o.WriteLine(";");
+			O.WriteLine(";");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitIfStatement(AdamantParser.IfStatementContext context)
 		{
-			o.WriteIndented("if(");
+			O.WriteIndented("if(");
 			context.condition.Accept(this);
-			o.WriteLine(")");
+			O.WriteLine(")");
 			context.then.Accept(this);
 			if(context.@else != null)
 			{
-				o.WriteIndentedLine("else");
+				O.WriteIndentedLine("else");
 				context.@else.Accept(this);
 			}
 			return MainFunctions.Empty;
@@ -314,9 +352,9 @@ namespace Adamant.Compiler.Gen.CSharp
 
 		public override MainFunctions VisitThrowStatement(AdamantParser.ThrowStatementContext context)
 		{
-			o.WriteIndented("throw ");
+			O.WriteIndented("throw ");
 			context.expression().Accept(this);
-			o.WriteLine(";");
+			O.WriteLine(";");
 			return MainFunctions.Empty;
 		}
 		#endregion
@@ -325,48 +363,49 @@ namespace Adamant.Compiler.Gen.CSharp
 		public override MainFunctions VisitCallExpression(AdamantParser.CallExpressionContext context)
 		{
 			context.expression().Accept(this);
-			o.Write("(");
-			o.WriteList(context.argumentList().expression(), this);
-			o.Write(")");
+			O.Write("(");
+			O.WriteList(context.argumentList().expression(), this);
+			O.Write(")");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitMemberExpression(AdamantParser.MemberExpressionContext context)
 		{
 			context.expression().Accept(this);
-			o.Write("." + context.identifier().GetText());
+			O.Write("." + context.identifier().GetText());
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitVariableExpression(AdamantParser.VariableExpressionContext context)
 		{
-			o.Write(context.identifier().GetText());
+			O.Write(context.identifier().GetText());
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitStringLiteralExpression(AdamantParser.StringLiteralExpressionContext context)
 		{
-			o.Write(context.GetText());
+			O.Write(context.GetText());
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitArrayAccessExpression(AdamantParser.ArrayAccessExpressionContext context)
 		{
 			context.expression().Accept(this);
-			o.Write("[");
-			o.WriteList(context.argumentList().expression(), this);
-			o.Write("]");
+			O.Write("[");
+			O.WriteList(context.argumentList().expression(), this);
+			O.Write("]");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitNewExpression(AdamantParser.NewExpressionContext context)
 		{
-			o.Write("new ");
+
+
 			context.typeName().Accept(this);
-			// TODO handle named constructors
-			o.Write("(");
-			o.WriteList(context.argumentList().expression(), this);
-			o.Write(")");
+			O.Write(".אCtor");
+			O.Write("(");
+			O.WriteList(context.argumentList().expression(), this);
+			O.Write(")");
 			return MainFunctions.Empty;
 		}
 
@@ -376,10 +415,10 @@ namespace Adamant.Compiler.Gen.CSharp
 			switch(op)
 			{
 				case "not":
-					o.Write("!");
+					O.Write("!");
 					break;
 				default:
-					o.Write(op);
+					O.Write(op);
 					break;
 			}
 			context.expression().Accept(this);
@@ -388,19 +427,19 @@ namespace Adamant.Compiler.Gen.CSharp
 
 		public override MainFunctions VisitNullLiteralExpression(AdamantParser.NullLiteralExpressionContext context)
 		{
-			o.Write("null");
+			O.Write("null");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitBooleanLiteralExpression(AdamantParser.BooleanLiteralExpressionContext context)
 		{
-			o.Write(context.BooleanLiteral().GetText());
+			O.Write(context.BooleanLiteral().GetText());
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitIntLiteralExpression(AdamantParser.IntLiteralExpressionContext context)
 		{
-			o.Write(context.IntLiteral().GetText());
+			O.Write(context.IntLiteral().GetText());
 			return MainFunctions.Empty;
 		}
 
@@ -420,14 +459,14 @@ namespace Adamant.Compiler.Gen.CSharp
 					op = "^=";
 					break;
 			}
-			o.Write($" {op} ");
+			O.Write($" {op} ");
 			context.rvalue.Accept(this);
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitThisExpression(AdamantParser.ThisExpressionContext context)
 		{
-			o.Write("this");
+			O.Write("this");
 			return MainFunctions.Empty;
 		}
 
@@ -437,20 +476,20 @@ namespace Adamant.Compiler.Gen.CSharp
 			var op = context.op.Text;
 			if(op == "<>")
 				op = "!=";
-			o.Write($" {op} ");
+			O.Write($" {op} ");
 			context.rhs.Accept(this);
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitIfExpression(AdamantParser.IfExpressionContext context)
 		{
-			o.Write("(");
+			O.Write("(");
 			context.condition.Accept(this);
-			o.Write(" ? ");
+			O.Write(" ? ");
 			context.then.Accept(this);
-			o.Write(" : ");
+			O.Write(" : ");
 			context.@else.Accept(this);
-			o.Write(")");
+			O.Write(")");
 			return MainFunctions.Empty;
 		}
 		#endregion
@@ -460,13 +499,13 @@ namespace Adamant.Compiler.Gen.CSharp
 			if(context.ownershipType() != null)
 				context.ownershipType().Accept(this);
 			else
-				o.Write("var");
+				O.Write("var");
 
-			o.Write(" ");
-			o.Write(context.identifier().GetText());
+			O.Write(" ");
+			O.Write(context.identifier().GetText());
 			if(context.expression() != null)
 			{
-				o.Write(" = ");
+				O.Write(" = ");
 				context.expression().Accept(this);
 			}
 			return MainFunctions.Empty;
@@ -474,17 +513,17 @@ namespace Adamant.Compiler.Gen.CSharp
 
 		public override MainFunctions VisitParameter(AdamantParser.ParameterContext context)
 		{
-			o.Write(Format(context._modifiers));
+			O.Write(Format(context._modifiers));
 			context.type.Accept(this);
-			o.Write(" " + context.name.GetText());
+			O.Write(" " + context.name.GetText());
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitTypeArguments(AdamantParser.TypeArgumentsContext context)
 		{
-			o.Write("<");
-			o.WriteList(context.ownershipType(), this);
-			o.Write(">");
+			O.Write("<");
+			O.WriteList(context.ownershipType(), this);
+			O.Write(">");
 			return MainFunctions.Empty;
 		}
 
@@ -493,28 +532,28 @@ namespace Adamant.Compiler.Gen.CSharp
 			var hasBaseClass = context.baseType != null;
 			var hasInterfaces = context._interfaces.Any();
 			if(hasBaseClass || hasInterfaces)
-				o.Write(" : ");
+				O.Write(" : ");
 
 			if(hasBaseClass)
 				context.baseType.Accept(this);
 
 			if(hasInterfaces)
-				o.WriteList(context._interfaces, this);
+				O.WriteList(context._interfaces, this);
 
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitTypeParameterList(AdamantParser.TypeParameterListContext context)
 		{
-			o.Write("<");
-			o.WriteList(context.typeParameter(), this);
-			o.Write(">");
+			O.Write("<");
+			O.WriteList(context.typeParameter(), this);
+			O.Write(">");
 			return MainFunctions.Empty;
 		}
 
 		public override MainFunctions VisitTypeParameter(AdamantParser.TypeParameterContext context)
 		{
-			o.Write(context.name.GetText());
+			O.Write(context.name.GetText());
 			// TODO how to handle lists and base types?
 			return MainFunctions.Empty;
 		}

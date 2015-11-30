@@ -1,0 +1,16 @@
+This document describes the mapping from Adamant to C#.  Names beginning with "א" are reserved for the mapping
+
+* The namespace "אRuntime" contains classes for use by the compiler for mapping.
+* All Adamant namespaces are placed in the namespace "א" to avoid name collision and accidental reference to .NET types
+* "void" is mapped to the struct "אVoid" (in אRuntime) to enable it to be used as a true types
+* Function declaration are placed in "אFuncs" classes since they are not directly supported by C#
+* "אAssemblyInfo.cs" is used for emitting the assembly info (version etc)
+* "אEntryPoint.cs" and the "אEntryPoint" are used to declare the C# Main method
+* Since C# constructors aren't as flexible as Adamant constructors, constructors are called through static methods. This involves:
+	1. Creating a non-generic version of the classes
+	2. Static methods named "אCtor" on that classes that call the actual constructors
+	3. Named constructors are placed on nested classes
+	4. All classes must be mapped as partial to avoid issues with the above class duplicating their name
+	5. The actual constructors are declared on the class
+	6. For named constructors, actual constructors are declared with a first parameter of "אCtorName_XXX אctorName" to disambiguate calls.
+	7. "אCtorName_XXX" types in the root namespace to avoid ambiguity (these are internal to the assembly)

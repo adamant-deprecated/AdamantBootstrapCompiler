@@ -121,7 +121,7 @@ typeParameterConstraint
 	;
 
 member
-	: attribute* modifier* 'new' identifier? parameterList constructorInitializer? methodBody														#Constructor
+	: attribute* modifier* 'new' name=identifier? parameterList ('=>' returnType=ownershipType)? constructorInitializer? methodBody						#Constructor
 	| attribute* modifier* 'delete' parameterList methodBody																						#Destructor
 	| attribute* modifier* 'conversion' typeArguments? parameterList '=>' ownershipType typeParameterConstraintClause* methodBody					#ConversionMethod
 	| attribute* modifier* 'operator' overloadableOperator parameterList '=>' ownershipType methodBody												#OperatorOverloadMethod
@@ -208,7 +208,8 @@ expression
 	| <assoc=right> condition=expression '?' then=expression ':' else=expression #IfExpression
 	| <assoc=right> lvalue=expression op=('='|'*='|'/='|'+='|'-='|'<<='|'>>='|'and='|'xor='|'or=') rvalue=expression #AssignmentExpression
 	| identifier											#VariableExpression
-	| 'new' typeName('.' identifier)? '(' argumentList ')'	#NewExpression
+	// Since new Class.Constructor() is indistiguishable from new Namespace.Class() we can't parse for named constructor calls here
+	| 'new' typeName '(' argumentList ')'					#NewExpression
 	| 'new' baseTypes? '(' argumentList ')' '{' member* '}'	#NewObjectExpression
 	| 'null'												#NullLiteralExpression
 	| 'this'												#ThisExpression

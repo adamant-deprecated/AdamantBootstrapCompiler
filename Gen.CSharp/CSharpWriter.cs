@@ -6,7 +6,7 @@ using Antlr4.Runtime;
 
 namespace Adamant.Compiler.Gen.CSharp
 {
-	internal class CSharpWriter
+	public class CSharpWriter
 	{
 		private readonly TextWriter writer;
 		private readonly StringBuilder indent = new StringBuilder();

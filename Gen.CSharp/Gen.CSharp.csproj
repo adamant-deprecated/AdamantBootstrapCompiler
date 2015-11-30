@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConstructorGenerator.cs" />
+    <Compile Include="ConstructorNameGenerator.cs" />
     <Compile Include="CSharpGenerator.cs" />
     <Compile Include="CSharpGenerator.old.cs" />
     <Compile Include="CSharpWriter.cs" />
