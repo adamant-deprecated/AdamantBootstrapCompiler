@@ -200,6 +200,9 @@ namespace Adamant.Compiler.Gen.CSharp
 				case "void":
 					name = "אVoid";
 					break;
+				case "any":
+					name = "object";
+					break;
 			}
 			O.Write(name);
 			context.typeArguments()?.Accept(this);

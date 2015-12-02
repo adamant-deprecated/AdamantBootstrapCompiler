@@ -27,10 +27,12 @@ fragment Unicode_Zs
 fragment Unicode_Lu
 	: '\u0041'..'\u005A' // LATIN CAPITAL LETTER A_Z
 	| '\u00C0'..'\u00DE' // ACCENTED CAPITAL LETTERS
+	| '\u0391'..'\u039A' // GREEK CAPITAL LETTERS
 	;
 
 fragment Unicode_Ll
 	: '\u0061'..'\u007A' // LATIN SMALL LETTER a_z
+	| '\u03B1'..'\u03C9' // GREEK SMALL LETTERS
 	;
 
 fragment Unicode_Lt
