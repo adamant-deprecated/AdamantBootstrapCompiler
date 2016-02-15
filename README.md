@@ -4,5 +4,8 @@ The Adamant compiler is being bootstrapped.  To serve this process, a compiler m
 ## Project Status: Alpha *Deprecated*
 This project should not be used, it has been superseded by the "[AdamantTemporaryCompiler](https://github.com/adamant-deprecated/AdamantTemporaryCompiler)" which has been superseded by the "[AdamantExploratoryCompiler](https://github.com/adamant/AdamantExploratoryCompiler)".
 
+### Download and Use
+Clone this git repo and compile using Visual Studio 2015.
+
 ## Explanation of this Project
 This project attempted to write a Adamant to C# direct translator in C#.  That is a translator without type-checking, borrow checking or significant code transformations.  Indeed it didn't even build a symbol table.  However, this approach was found to be inadequate because there were important language features it just wasn't possible to translate this way (like covariant and contravariant types, type inference etc.).
