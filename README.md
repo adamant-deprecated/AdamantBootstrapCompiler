@@ -2,7 +2,7 @@
 The Adamant compiler is being bootstrapped.  To serve this process, a compiler must first be written in another language. In this case C#. This is that temporary compiler.  It will be thrown away when the compiler is re-written in Adamant.
 
 ## Project Status: Alpha *Deprecated*
-This project should not be used, it has been superseded by the "[AdamantTemporaryCompiler](https://github.com/adamant-deprecated/AdamantTemporaryCompiler)" which has been superseded by the "[AdamantExploratoryCompiler](https://github.com/adamant/AdamantExploratoryCompiler)".
+This project should not be used, it has been superseded by the "[AdamantTemporaryCompiler](https://github.com/adamant-deprecated/AdamantTemporaryCompiler)" which has been superseded by the "[AdamantExploratoryCompiler](https://github.com/adamant-deprecated/AdamantExploratoryCompiler)".
 
 ### Download and Use
 Clone this git repo and compile using Visual Studio 2015.
