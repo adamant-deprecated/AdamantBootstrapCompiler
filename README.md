@@ -4,7 +4,7 @@ The Adamant compiler is being bootstrapped.  To serve this process, a compiler m
 
 ## Project Status: Alpha *Deprecated*
 
-This project should not be used. The current Adamant compiler is the "[adamant.tools.compiler.bootstrap](https://github.com/adamant/adamant.tools.compiler.bootstrap)" project.
+This project should not be used.
 
 ### Download and Use
 
